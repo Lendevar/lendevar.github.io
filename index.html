@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HanziCraft Analog — Интерактивное чтение</title>
+  <meta name="theme-color" content="#2563eb" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --pinyin: #dc2626;
+      --hover-bg: #fde68a;
+      --learning-bg: #dbeafe;
+      --learned-bg: #dcfce7;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 24px 16px 80px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    /* Top Control Bar */
+    .toolbar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+      margin-bottom: 20px;
+    }
+
+    .file-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1 1 320px;
+      min-width: 0;
+    }
+
+    .file-input {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 100%;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .file-input::file-selector-button {
+      background: #f1f5f9;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-main);
+      cursor: pointer;
+      margin-right: 10px;
+      transition: background 0.15s;
+    }
+
+    .file-input::file-selector-button:hover {
+      background: #e2e8f0;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background: #f1f5f9;
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+
+    .btn-secondary:hover {
+      background: #e2e8f0;
+    }
+
+    .progress-bar {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding-top: 8px;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .progress-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .text-select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .text-select {
+      font-family: inherit;
+      font-size: 13px;
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .status-bar {
+      width: 100%;
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding-top: 6px;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .status-bar.error {
+      color: #dc2626;
+    }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      display: inline-block;
+      border: 1px solid rgba(15, 23, 42, 0.1);
+    }
+
+    /* Reader Card */
+    .reader-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 32px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    .reader-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .reader-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-ghost:hover {
+      background: #f8fafc;
+      color: var(--text-main);
+    }
+
+    .chinese-text {
+      font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      font-size: 26px;
+      line-height: 2.15;
+      letter-spacing: 0.03em;
+      color: #1e293b;
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+
+    .hanzi-word {
+      display: inline-block;
+      padding: 0;
+      margin: 0;
+      border-radius: 3px;
+      cursor: pointer;
+      transition: background-color 0.12s ease;
+    }
+
+    .reader-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .hanzi-word[data-status="learning"] {
+      background-color: var(--learning-bg);
+    }
+
+    .hanzi-word[data-status="learned"] {
+      background-color: var(--learned-bg);
+    }
+
+    .hanzi-word:hover,
+    .hanzi-word.active-hover {
+      background-color: var(--hover-bg) !important;
+    }
+
+    .plain-token {
+      color: #334155;
+    }
+
+    .translation-box {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid #f1f5f9;
+      font-size: 15px;
+      color: var(--text-muted);
+      white-space: pre-wrap;
+      display: none;
+    }
+
+    .translation-box.visible {
+      display: block;
+    }
+
+    /* Floating HanziCraft-style Popover */
+    .popover {
+      position: fixed;
+      z-index: 1000;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.14);
+      padding: 12px 14px;
+      min-width: 240px;
+      max-width: 340px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(4px);
+      transition: opacity 0.12s ease, transform 0.12s ease;
+    }
+
+    .popover.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .popover-top {
+      display: flex;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .pop-hanzi {
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: #0f172a;
+      line-height: 1.2;
+    }
+
+    .pop-pinyin {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--pinyin);
+    }
+
+    .pop-meaning {
+      font-size: 14px;
+      color: #475569;
+    }
+
+    .pop-pos {
+      width: 100%;
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: -4px;
+    }
+
+    .popover-divider {
+      height: 1px;
+      background: #f1f5f9;
+      margin: 8px 0 10px;
+    }
+
+    .popover-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .pop-char-mini {
+      font-family: 'Noto Sans SC', sans-serif;
+      font-size: 15px;
+      color: #334155;
+      font-weight: 500;
+    }
+
+    .status-segmented {
+      display: inline-flex;
+      background: #f1f5f9;
+      border-radius: 7px;
+      padding: 2px;
+      gap: 2px;
+    }
+
+    .status-btn {
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 500;
+      color: #64748b;
+      padding: 4px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+
+    .status-btn:hover {
+      color: #0f172a;
+    }
+
+    .status-btn.active[data-set-status="unknown"] {
+      background: #94a3b8;
+      color: #ffffff;
+    }
+
+    .status-btn.active[data-set-status="learning"] {
+      background: #3b82f6;
+      color: #ffffff;
+    }
+
+    .status-btn.active[data-set-status="learned"] {
+      background: #22c55e;
+      color: #ffffff;
+    }
+
+    /* Practice Spoiler ("Закрепление") */
+    .practice-spoiler {
+      margin-top: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      overflow: hidden;
+    }
+
+    .practice-summary {
+      padding: 16px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      list-style: none;
+      user-select: none;
+      transition: background 0.15s;
+    }
+
+    .practice-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .practice-summary:hover {
+      background: #f8fafc;
+    }
+
+    .practice-summary-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .practice-chevron {
+      display: inline-block;
+      font-size: 12px;
+      color: var(--text-muted);
+      transition: transform 0.15s ease;
+    }
+
+    .practice-spoiler[open] .practice-chevron {
+      transform: rotate(90deg);
+    }
+
+    .practice-count {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: #f1f5f9;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .practice-body {
+      padding: 0 24px 22px;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    .practice-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .practice-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .practice-row {
+      display: grid;
+      grid-template-columns: 90px 1fr 1.4fr;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+    }
+
+    .practice-hanzi {
+      font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text-main);
+      text-align: center;
+    }
+
+    .practice-select {
+      width: 100%;
+      font-family: inherit;
+      font-size: 13px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: border-color 0.15s, background-color 0.15s;
+    }
+
+    .practice-select.correct,
+    .practice-select.correct:disabled {
+      background-color: #dcfce7;
+      border-color: #22c55e;
+      color: #166534;
+      font-weight: 500;
+      opacity: 1;
+      cursor: default;
+    }
+
+    .practice-select.incorrect {
+      border-color: #ef4444;
+      background-color: #fef2f2;
+    }
+
+    @media (max-width: 600px) {
+      .reader-card {
+        padding: 20px 18px;
+      }
+      .chinese-text {
+        font-size: 22px;
+      }
+      .practice-row {
+        grid-template-columns: 1fr;
+      }
+      .practice-hanzi {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="toolbar">
+      <div class="file-group">
+        <input type="file" id="jsonFileInput" class="file-input" accept=".json,application/json" />
+        <button type="button" id="loadJsonBtn" class="btn-primary">Загрузить JSON</button>
+      </div>
+
+      <div class="text-select-wrap">
+        <select id="textSelect" class="text-select" aria-label="Выбор текста"></select>
+      </div>
+
+      <div class="progress-bar">
+        <span class="progress-label">Прогресс:</span>
+        <button type="button" id="exportProgressBtn" class="btn-secondary">Экспорт статусов JSON</button>
+        <div class="file-group">
+          <input type="file" id="importProgressInput" class="file-input" accept=".json,application/json" />
+          <button type="button" id="importProgressBtn" class="btn-secondary">Импорт статусов</button>
+        </div>
+      </div>
+
+      <div id="statusBar" class="status-bar">
+        <span id="statusMessage">Загружен встроенный пример (8 слов, 1 текст).</span>
+        <div class="legend">
+          <span class="legend-item"><span class="legend-dot" style="background:#ffffff"></span>Не знаю</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--learning-bg)"></span>Учу</span>
+          <span class="legend-item"><span class="legend-dot" style="background:var(--learned-bg)"></span>Знаю</span>
+        </div>
+      </div>
+    </div>
+
+    <main class="reader-card">
+      <div class="reader-header">
+        <h1 id="readerTitle" class="reader-title">Мой папа — врач</h1>
+        <div class="reader-actions">
+          <select id="fontSelect" class="text-select" aria-label="Выбор шрифта">
+            <option value="'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif">Современный (Noto Sans)</option>
+            <option value="'Noto Serif SC', 'Songti SC', 'SimSun', serif">Официальный (Noto Serif)</option>
+            <option value="'Ma Shan Zheng', cursive">Каллиграфия / курсив (Ma Shan Zheng)</option>
+            <option value="'ZCOOL XiaoWei', serif">Книжный мягкий (ZCOOL XiaoWei)</option>
+          </select>
+          <button type="button" id="toggleTranslationBtn" class="btn-ghost">Показать перевод</button>
+        </div>
+      </div>
+
+      <div id="chineseText" class="chinese-text"></div>
+      <div id="translationBox" class="translation-box"></div>
+    </main>
+
+    <details id="practiceSpoiler" class="practice-spoiler">
+      <summary class="practice-summary">
+        <span class="practice-summary-left">
+          <span class="practice-chevron">▶</span>
+          <span>Закрепление</span>
+        </span>
+        <span id="practiceCount" class="practice-count">0 / 0</span>
+      </summary>
+      <div class="practice-body">
+        <div class="practice-toolbar">
+          <span>Подбери пиньинь и перевод для каждого слова из словаря</span>
+          <button type="button" id="resetPracticeBtn" class="btn-ghost">Сбросить</button>
+        </div>
+        <div id="practiceList" class="practice-list"></div>
+      </div>
+    </details>
+  </div>
+
+  <!-- HanziCraft-style Hover Popover -->
+  <div id="wordPopover" class="popover" role="tooltip">
+    <div class="popover-top">
+      <span id="popHanzi" class="pop-hanzi"></span>
+      <span id="popPinyin" class="pop-pinyin"></span>
+      <span id="popMeaning" class="pop-meaning"></span>
+      <span id="popPos" class="pop-pos"></span>
+    </div>
+    <div class="popover-divider"></div>
+    <div class="popover-bottom">
+      <span id="popCharMini" class="pop-char-mini"></span>
+      <div class="status-segmented">
+        <button type="button" class="status-btn" data-set-status="unknown">Не знаю</button>
+        <button type="button" class="status-btn" data-set-status="learning">Учу</button>
+        <button type="button" class="status-btn" data-set-status="learned">Знаю</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DEFAULT_DATA = {
+      words: [
+        { id: 1, hanzi: "爱", pinyin: "ài", meaning_ru: "любить; любовь", part_of_speech: "глагол / существительное" },
+        { id: 2, hanzi: "八", pinyin: "bā", meaning_ru: "восемь", part_of_speech: "числительное" },
+        { id: 3, hanzi: "爸爸", pinyin: "bàba", meaning_ru: "папа, отец", part_of_speech: "существительное" },
+        { id: 4, hanzi: "我", pinyin: "wǒ", meaning_ru: "я", part_of_speech: "местоимение" },
+        { id: 5, hanzi: "是", pinyin: "shì", meaning_ru: "быть, являться", part_of_speech: "глагол" },
+        { id: 6, hanzi: "医生", pinyin: "yīshēng", meaning_ru: "врач, доктор", part_of_speech: "существительное" },
+        { id: 7, hanzi: "今年", pinyin: "jīnnián", meaning_ru: "этот год; в этом году", part_of_speech: "существительное / наречие" },
+        { id: 8, hanzi: "岁", pinyin: "suì", meaning_ru: "год (о возрасте), лет", part_of_speech: "счётное слово" }
+      ],
+      texts: [
+        {
+          id: 1,
+          title: "Мой папа — врач",
+          tokens: [4, 3, 5, 6, "，", 7, "60", 8, "。"],
+          translation_ru: "Мой папа — врач, в этом году ему 60 лет."
+        },
+        {
+          id: 2,
+          title: "Я люблю папу",
+          tokens: [4, 1, 3, "。"],
+          translation_ru: "Я люблю папу."
+        }
+      ]
+    };
+
+    const STORAGE_KEY = "hanzicraft_analog_statuses_v1";
+
+    let appData = DEFAULT_DATA;
+    let wordMap = new Map();
+    let currentTextIndex = 0;
+    let currentPracticeWords = [];
+    let wordStatuses = loadStatuses();
+    let activeWord = null;
+    let activeSpan = null;
+    let hideTimeout = null;
+
+    const jsonFileInput = document.getElementById("jsonFileInput");
+    const loadJsonBtn = document.getElementById("loadJsonBtn");
+    const exportProgressBtn = document.getElementById("exportProgressBtn");
+    const importProgressInput = document.getElementById("importProgressInput");
+    const importProgressBtn = document.getElementById("importProgressBtn");
+    const textSelect = document.getElementById("textSelect");
+    const statusBar = document.getElementById("statusBar");
+    const statusMessage = document.getElementById("statusMessage");
+    const readerTitle = document.getElementById("readerTitle");
+    const chineseText = document.getElementById("chineseText");
+    const translationBox = document.getElementById("translationBox");
+    const toggleTranslationBtn = document.getElementById("toggleTranslationBtn");
+    const fontSelect = document.getElementById("fontSelect");
+    const practiceSpoiler = document.getElementById("practiceSpoiler");
+    const practiceCount = document.getElementById("practiceCount");
+    const practiceList = document.getElementById("practiceList");
+    const resetPracticeBtn = document.getElementById("resetPracticeBtn");
+
+    const popover = document.getElementById("wordPopover");
+    const popHanzi = document.getElementById("popHanzi");
+    const popPinyin = document.getElementById("popPinyin");
+    const popMeaning = document.getElementById("popMeaning");
+    const popPos = document.getElementById("popPos");
+    const popCharMini = document.getElementById("popCharMini");
+    const statusButtons = document.querySelectorAll(".status-btn");
+
+    function loadStatuses() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveStatuses() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(wordStatuses));
+      } catch (e) {
+        // Ignore storage quota or sandbox restrictions
+      }
+    }
+
+    function getWordStatus(hanzi) {
+      return wordStatuses[hanzi] || "unknown";
+    }
+
+    function buildWordMap(words) {
+      const map = new Map();
+      words.forEach((w) => map.set(w.id, w));
+      return map;
+    }
+
+    function setStatusMsg(msg, isError) {
+      statusMessage.textContent = msg;
+      statusBar.classList.toggle("error", Boolean(isError));
+    }
+
+    function populateTextSelect() {
+      textSelect.innerHTML = "";
+      if (!appData.texts || appData.texts.length === 0) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.textContent = "Нет текстов";
+        textSelect.appendChild(opt);
+        return;
+      }
+
+      appData.texts.forEach((t, idx) => {
+        const opt = document.createElement("option");
+        opt.value = String(idx);
+        opt.textContent = t.title || `Текст #${t.id || idx + 1}`;
+        textSelect.appendChild(opt);
+      });
+    }
+
+    function renderText(index) {
+      currentTextIndex = index;
+      hidePopoverImmediate();
+      chineseText.innerHTML = "";
+
+      if (!appData.texts || !appData.texts[index]) {
+        readerTitle.textContent = "Текст не найден";
+        translationBox.textContent = "";
+        renderPractice(index);
+        return;
+      }
+
+      const item = appData.texts[index];
+      readerTitle.textContent = item.title || `Текст #${item.id || index + 1}`;
+      translationBox.textContent = item.translation_ru || "Перевод не указан.";
+
+      const frag = document.createDocumentFragment();
+      (item.tokens || []).forEach((token) => {
+        if (typeof token === "number") {
+          const word = wordMap.get(token);
+          if (word) {
+            const span = document.createElement("span");
+            span.className = "hanzi-word";
+            span.textContent = word.hanzi;
+            span.dataset.id = String(word.id);
+            span.dataset.hanzi = word.hanzi;
+            span.dataset.status = getWordStatus(word.hanzi);
+
+            span.addEventListener("mouseenter", () => showPopover(word, span));
+            span.addEventListener("mouseleave", scheduleHidePopover);
+            span.addEventListener("click", () => showPopover(word, span));
+
+            frag.appendChild(span);
+          } else {
+            const missing = document.createElement("span");
+            missing.className = "plain-token";
+            missing.textContent = `[?${token}]`;
+            frag.appendChild(missing);
+          }
+        } else {
+          const str = String(token);
+          if (str.includes("\n")) {
+            const parts = str.split("\n");
+            parts.forEach((part, pIdx) => {
+              if (part.length > 0) {
+                const plain = document.createElement("span");
+                plain.className = "plain-token";
+                plain.textContent = part;
+                frag.appendChild(plain);
+              }
+              if (pIdx < parts.length - 1) {
+                frag.appendChild(document.createElement("br"));
+              }
+            });
+          } else {
+            const plain = document.createElement("span");
+            plain.className = "plain-token";
+            plain.textContent = str;
+            frag.appendChild(plain);
+          }
+        }
+      });
+
+      chineseText.appendChild(frag);
+      renderPractice(index);
+    }
+
+    function showPopover(word, targetSpan) {
+      if (hideTimeout) {
+        clearTimeout(hideTimeout);
+        hideTimeout = null;
+      }
+
+      if (activeSpan && activeSpan !== targetSpan) {
+        activeSpan.classList.remove("active-hover");
+      }
+
+      activeWord = word;
+      activeSpan = targetSpan;
+      activeSpan.classList.add("active-hover");
+
+      popHanzi.textContent = word.hanzi;
+      popPinyin.textContent = word.pinyin || "";
+      popMeaning.textContent = word.meaning_ru || "";
+      popPos.textContent = word.part_of_speech || "";
+      popCharMini.textContent = word.hanzi;
+
+      const currentStatus = getWordStatus(word.hanzi);
+      statusButtons.forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.setStatus === currentStatus);
+      });
+
+      popover.classList.add("visible");
+
+      // Position above the hovered word (or below if near top of viewport)
+      const rect = targetSpan.getBoundingClientRect();
+      const popRect = popover.getBoundingClientRect();
+      const margin = 10;
+
+      let left = rect.left + rect.width / 2 - popRect.width / 2;
+      left = Math.max(12, Math.min(left, window.innerWidth - popRect.width - 12));
+
+      let top = rect.top - popRect.height - margin;
+      if (top < 12) {
+        top = rect.bottom + margin;
+      }
+
+      popover.style.left = `${left}px`;
+      popover.style.top = `${top}px`;
+    }
+
+    function scheduleHidePopover() {
+      hideTimeout = setTimeout(() => {
+        hidePopoverImmediate();
+      }, 140);
+    }
+
+    function hidePopoverImmediate() {
+      if (hideTimeout) {
+        clearTimeout(hideTimeout);
+        hideTimeout = null;
+      }
+      popover.classList.remove("visible");
+      if (activeSpan) {
+        activeSpan.classList.remove("active-hover");
+        activeSpan = null;
+      }
+      activeWord = null;
+    }
+
+    popover.addEventListener("mouseenter", () => {
+      if (hideTimeout) {
+        clearTimeout(hideTimeout);
+        hideTimeout = null;
+      }
+    });
+
+    popover.addEventListener("mouseleave", scheduleHidePopover);
+
+    statusButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (!activeWord) return;
+        const newStatus = btn.dataset.setStatus;
+        wordStatuses[activeWord.hanzi] = newStatus;
+        saveStatuses();
+
+        statusButtons.forEach((b) => {
+          b.classList.toggle("active", b.dataset.setStatus === newStatus);
+        });
+
+        // Update all instances of this word in the current text
+        document.querySelectorAll(".hanzi-word").forEach((el) => {
+          if (el.dataset.hanzi === activeWord.hanzi) {
+            el.dataset.status = newStatus;
+          }
+        });
+      });
+    });
+
+    fontSelect.addEventListener("change", () => {
+      chineseText.style.fontFamily = fontSelect.value;
+    });
+
+    toggleTranslationBtn.addEventListener("click", () => {
+      const isVisible = translationBox.classList.toggle("visible");
+      toggleTranslationBtn.textContent = isVisible ? "Скрыть перевод" : "Показать перевод";
+    });
+
+    textSelect.addEventListener("change", () => {
+      const idx = Number(textSelect.value) || 0;
+      renderText(idx);
+    });
+
+    loadJsonBtn.addEventListener("click", () => {
+      const file = jsonFileInput.files && jsonFileInput.files[0];
+      if (!file) {
+        setStatusMsg("Сначала выберите .json файл в поле слева.", true);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const parsed = JSON.parse(event.target.result);
+          if (!Array.isArray(parsed.words) || !Array.isArray(parsed.texts)) {
+            setStatusMsg("Ошибка: в JSON должны быть массивы 'words' и 'texts'.", true);
+            return;
+          }
+
+          appData = parsed;
+          wordMap = buildWordMap(appData.words);
+          populateTextSelect();
+          practiceSpoiler.open = false;
+          renderText(0);
+          setStatusMsg(`Загружен файл «${file.name}» (${appData.words.length} слов, ${appData.texts.length} текстов).`, false);
+        } catch (err) {
+          setStatusMsg("Не удалось прочитать JSON: проверьте синтаксис файла.", true);
+        }
+      };
+      reader.onerror = () => {
+        setStatusMsg("Ошибка чтения файла.", true);
+      };
+      reader.readAsText(file, "UTF-8");
+    });
+
+    function applyStatusesToCurrentText() {
+      document.querySelectorAll(".hanzi-word").forEach((el) => {
+        el.dataset.status = getWordStatus(el.dataset.hanzi);
+      });
+    }
+
+    exportProgressBtn.addEventListener("click", () => {
+      const filtered = {};
+      Object.entries(wordStatuses).forEach(([hanzi, status]) => {
+        if (status === "learning" || status === "learned") {
+          filtered[hanzi] = status;
+        }
+      });
+
+      const payload = {
+        version: 1,
+        exported_at: new Date().toISOString(),
+        statuses: filtered
+      };
+
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "hanzi_progress.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      const count = Object.keys(filtered).length;
+      setStatusMsg(`Экспортировано статусов: ${count} (файл hanzi_progress.json).`, false);
+    });
+
+    importProgressBtn.addEventListener("click", () => {
+      const file = importProgressInput.files && importProgressInput.files[0];
+      if (!file) {
+        setStatusMsg("Сначала выберите JSON-файл со статусами для импорта.", true);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const parsed = JSON.parse(event.target.result);
+          const validStatuses = new Set(["unknown", "learning", "learned"]);
+          let importedCount = 0;
+
+          if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+            const source = (parsed.statuses && typeof parsed.statuses === "object" && !Array.isArray(parsed.statuses))
+              ? parsed.statuses
+              : parsed;
+
+            Object.entries(source).forEach(([hanzi, status]) => {
+              if (typeof hanzi === "string" && validStatuses.has(status)) {
+                if (status === "unknown") {
+                  delete wordStatuses[hanzi];
+                } else {
+                  wordStatuses[hanzi] = status;
+                }
+                importedCount += 1;
+              }
+            });
+          } else if (Array.isArray(parsed)) {
+            parsed.forEach((item) => {
+              if (item && typeof item.hanzi === "string" && validStatuses.has(item.status)) {
+                if (item.status === "unknown") {
+                  delete wordStatuses[item.hanzi];
+                } else {
+                  wordStatuses[item.hanzi] = item.status;
+                }
+                importedCount += 1;
+              }
+            });
+          } else {
+            setStatusMsg("Неверный формат JSON со статусами.", true);
+            return;
+          }
+
+          saveStatuses();
+          applyStatusesToCurrentText();
+          setStatusMsg(`Импортировано статусов из «${file.name}»: ${importedCount}.`, false);
+        } catch (err) {
+          setStatusMsg("Не удалось прочитать JSON со статусами.", true);
+        }
+      };
+      reader.onerror = () => {
+        setStatusMsg("Ошибка чтения файла статусов.", true);
+      };
+      reader.readAsText(file, "UTF-8");
+    });
+
+    // Close popover if user clicks outside
+    document.addEventListener("click", (e) => {
+      if (!popover.contains(e.target) && !e.target.classList.contains("hanzi-word")) {
+        hidePopoverImmediate();
+      }
+    });
+
+    function getWordsForText(index) {
+      const item = appData.texts && appData.texts[index];
+      if (!item || !Array.isArray(item.tokens)) return [];
+      const seenIds = new Set();
+      const result = [];
+      item.tokens.forEach((token) => {
+        if (typeof token === "number" && !seenIds.has(token)) {
+          const word = wordMap.get(token);
+          if (word) {
+            seenIds.add(token);
+            result.push(word);
+          }
+        }
+      });
+      return result;
+    }
+
+    function updatePracticeCounter() {
+      const rows = practiceList.querySelectorAll(".practice-row");
+      let solvedWords = 0;
+      rows.forEach((row) => {
+        const pDone = row.querySelector(".pinyin-select")?.classList.contains("correct");
+        const mDone = row.querySelector(".meaning-select")?.classList.contains("correct");
+        if (pDone && mDone) solvedWords += 1;
+      });
+      practiceCount.textContent = `${solvedWords} / ${currentPracticeWords.length}`;
+    }
+
+    function removeOptionFromOtherSelects(selectorClass, solvedSelect, matchedValue) {
+      practiceList.querySelectorAll(`.${selectorClass}`).forEach((sel) => {
+        if (sel === solvedSelect || sel.disabled) return;
+        Array.from(sel.options).forEach((opt) => {
+          if (opt.value === matchedValue) {
+            opt.remove();
+          }
+        });
+      });
+    }
+
+    function renderPractice(index = currentTextIndex) {
+      practiceList.innerHTML = "";
+      currentPracticeWords = getWordsForText(index);
+      const words = currentPracticeWords;
+      if (words.length === 0) {
+        practiceCount.textContent = "0 / 0";
+        return;
+      }
+
+      const sortedPinyins = Array.from(new Set(words.map((w) => w.pinyin).filter(Boolean)))
+        .sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
+
+      const sortedMeanings = Array.from(new Set(words.map((w) => w.meaning_ru).filter(Boolean)))
+        .sort((a, b) => a.localeCompare(b, "ru", { sensitivity: "base" }));
+
+      const frag = document.createDocumentFragment();
+
+      words.forEach((word) => {
+        const row = document.createElement("div");
+        row.className = "practice-row";
+
+        const hanziEl = document.createElement("div");
+        hanziEl.className = "practice-hanzi";
+        hanziEl.textContent = word.hanzi;
+
+        const pinyinSelect = document.createElement("select");
+        pinyinSelect.className = "practice-select pinyin-select";
+        pinyinSelect.setAttribute("aria-label", `Пиньинь для ${word.hanzi}`);
+        const pPlaceholder = document.createElement("option");
+        pPlaceholder.value = "";
+        pPlaceholder.textContent = "— пиньинь —";
+        pinyinSelect.appendChild(pPlaceholder);
+        sortedPinyins.forEach((p) => {
+          const opt = document.createElement("option");
+          opt.value = p;
+          opt.textContent = p;
+          pinyinSelect.appendChild(opt);
+        });
+
+        pinyinSelect.addEventListener("change", () => {
+          pinyinSelect.classList.remove("incorrect");
+          if (!pinyinSelect.value) return;
+          if (pinyinSelect.value === word.pinyin) {
+            pinyinSelect.classList.add("correct");
+            pinyinSelect.disabled = true;
+            removeOptionFromOtherSelects("pinyin-select", pinyinSelect, word.pinyin);
+            updatePracticeCounter();
+          } else {
+            pinyinSelect.classList.add("incorrect");
+          }
+        });
+
+        const meaningSelect = document.createElement("select");
+        meaningSelect.className = "practice-select meaning-select";
+        meaningSelect.setAttribute("aria-label", `Значение для ${word.hanzi}`);
+        const mPlaceholder = document.createElement("option");
+        mPlaceholder.value = "";
+        mPlaceholder.textContent = "— значение —";
+        meaningSelect.appendChild(mPlaceholder);
+        sortedMeanings.forEach((m) => {
+          const opt = document.createElement("option");
+          opt.value = m;
+          opt.textContent = m;
+          meaningSelect.appendChild(opt);
+        });
+
+        meaningSelect.addEventListener("change", () => {
+          meaningSelect.classList.remove("incorrect");
+          if (!meaningSelect.value) return;
+          if (meaningSelect.value === word.meaning_ru) {
+            meaningSelect.classList.add("correct");
+            meaningSelect.disabled = true;
+            removeOptionFromOtherSelects("meaning-select", meaningSelect, word.meaning_ru);
+            updatePracticeCounter();
+          } else {
+            meaningSelect.classList.add("incorrect");
+          }
+        });
+
+        row.appendChild(hanziEl);
+        row.appendChild(pinyinSelect);
+        row.appendChild(meaningSelect);
+        frag.appendChild(row);
+      });
+
+      practiceList.appendChild(frag);
+      updatePracticeCounter();
+    }
+
+    resetPracticeBtn.addEventListener("click", () => {
+      renderPractice(currentTextIndex);
+    });
+
+    // Initial render with embedded DEFAULT_DATA
+    wordMap = buildWordMap(appData.words);
+    populateTextSelect();
+    renderText(0);
+
+    if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>

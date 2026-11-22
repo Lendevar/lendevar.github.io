@@ -161,6 +161,8 @@
       background: var(--surface);
       color: var(--text-main);
       cursor: pointer;
+      max-width: 100%;
+      min-width: 0;
     }
 
     .status-bar {
@@ -545,11 +547,48 @@
     }
 
     @media (max-width: 600px) {
+      .toolbar {
+        padding: 14px;
+      }
+      .file-group {
+        flex-direction: column;
+        align-items: stretch;
+        flex: 1 1 100%;
+      }
+      .file-input {
+        width: 100%;
+      }
+      .text-select-wrap {
+        width: 100%;
+      }
+      .text-select-wrap .text-select {
+        width: 100%;
+      }
       .reader-card {
-        padding: 20px 18px;
+        padding: 20px 16px;
+      }
+      .reader-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .reader-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .reader-actions .text-select,
+      .reader-actions .btn-ghost {
+        width: 100%;
       }
       .chinese-text {
         font-size: 22px;
+      }
+      .practice-summary {
+        padding: 14px 16px;
+      }
+      .practice-body {
+        padding: 0 16px 18px;
       }
       .practice-row {
         grid-template-columns: 1fr;

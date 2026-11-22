@@ -45,6 +45,49 @@
       margin: 0 auto;
     }
 
+    .app-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 0 4px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .version-badge {
+      background: #e2e8f0;
+      color: #475569;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+    }
+
+    .btn-delete {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 7px 9px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn-delete:hover:not(:disabled) {
+      background: #fee2e2;
+      border-color: #fca5a5;
+    }
+
+    .btn-delete:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
     /* Top Control Bar */
     .toolbar {
       background: var(--surface);
@@ -562,6 +605,7 @@
         width: 100%;
       }
       .text-select-wrap .text-select {
+        flex: 1;
         width: 100%;
       }
       .reader-card {
@@ -601,6 +645,10 @@
 </head>
 <body>
   <div class="container">
+    <div class="app-meta">
+      <span>HanziReader</span>
+      <span class="version-badge">Версия v1</span>
+    </div>
     <div class="toolbar">
       <div class="file-group">
         <input type="file" id="jsonFileInput" class="file-input" accept=".json,application/json" />
@@ -609,6 +657,15 @@
 
       <div class="text-select-wrap">
         <select id="textSelect" class="text-select" aria-label="Выбор текста"></select>
+        <button type="button" id="deleteTextBtn" class="btn-delete" title="Удалить текущий текст из памяти" aria-label="Удалить текущий текст из памяти">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+            <path d="M10 11v6"></path>
+            <path d="M14 11v6"></path>
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path>
+          </svg>
+        </button>
       </div>
 
       <div class="progress-bar">
@@ -714,8 +771,9 @@
     };
 
     const STORAGE_KEY = "hanzicraft_analog_statuses_v1";
+    const LIBRARY_STORAGE_KEY = "hanzicraft_analog_library_v1";
 
-    let appData = DEFAULT_DATA;
+    let appData = loadLibrary();
     let wordMap = new Map();
     let currentTextIndex = 0;
     let currentPracticeWords = [];
@@ -730,6 +788,7 @@
     const importProgressInput = document.getElementById("importProgressInput");
     const importProgressBtn = document.getElementById("importProgressBtn");
     const textSelect = document.getElementById("textSelect");
+    const deleteTextBtn = document.getElementById("deleteTextBtn");
     const statusBar = document.getElementById("statusBar");
     const statusMessage = document.getElementById("statusMessage");
     const readerTitle = document.getElementById("readerTitle");
@@ -749,6 +808,85 @@
     const popPos = document.getElementById("popPos");
     const popCharMini = document.getElementById("popCharMini");
     const statusButtons = document.querySelectorAll(".status-btn");
+
+    function cloneDefaultData() {
+      return JSON.parse(JSON.stringify(DEFAULT_DATA));
+    }
+
+    function loadLibrary() {
+      try {
+        const raw = localStorage.getItem(LIBRARY_STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.words) && Array.isArray(parsed.texts)) {
+            return parsed;
+          }
+        }
+      } catch (e) {
+        // Ignore storage errors
+      }
+      return cloneDefaultData();
+    }
+
+    function saveLibrary() {
+      try {
+        localStorage.setItem(LIBRARY_STORAGE_KEY, JSON.stringify(appData));
+      } catch (e) {
+        // Ignore storage quota or sandbox restrictions
+      }
+    }
+
+    function mergeImportedData(parsed) {
+      const hanziToGlobalId = new Map();
+      let maxWordId = 0;
+
+      appData.words.forEach((w) => {
+        if (typeof w.id === "number" && w.id > maxWordId) maxWordId = w.id;
+        if (w.hanzi && !hanziToGlobalId.has(w.hanzi)) {
+          hanziToGlobalId.set(w.hanzi, w.id);
+        }
+      });
+
+      const localIdToGlobalId = new Map();
+      parsed.words.forEach((w) => {
+        if (!w || !w.hanzi) return;
+        if (hanziToGlobalId.has(w.hanzi)) {
+          localIdToGlobalId.set(w.id, hanziToGlobalId.get(w.hanzi));
+        } else {
+          maxWordId += 1;
+          const newWord = {
+            id: maxWordId,
+            hanzi: w.hanzi,
+            pinyin: w.pinyin || "",
+            meaning_ru: w.meaning_ru || "",
+            part_of_speech: w.part_of_speech || ""
+          };
+          appData.words.push(newWord);
+          hanziToGlobalId.set(w.hanzi, maxWordId);
+          localIdToGlobalId.set(w.id, maxWordId);
+        }
+      });
+
+      const firstNewIndex = appData.texts.length;
+      parsed.texts.forEach((t, idx) => {
+        const remappedTokens = (t.tokens || []).map((tok) => {
+          if (typeof tok === "number" && localIdToGlobalId.has(tok)) {
+            return localIdToGlobalId.get(tok);
+          }
+          return tok;
+        });
+
+        appData.texts.push({
+          id: Date.now() + idx,
+          title: t.title || `Текст #${appData.texts.length + 1}`,
+          tokens: remappedTokens,
+          translation_ru: t.translation_ru || ""
+        });
+      });
+
+      saveLibrary();
+      return firstNewIndex;
+    }
 
     function loadStatuses() {
       try {
@@ -789,8 +927,10 @@
         opt.value = "";
         opt.textContent = "Нет текстов";
         textSelect.appendChild(opt);
+        deleteTextBtn.disabled = true;
         return;
       }
+      deleteTextBtn.disabled = false;
 
       appData.texts.forEach((t, idx) => {
         const opt = document.createElement("option");
@@ -973,6 +1113,19 @@
       renderText(idx);
     });
 
+    deleteTextBtn.addEventListener("click", () => {
+      if (!appData.texts || appData.texts.length === 0) return;
+      const removed = appData.texts.splice(currentTextIndex, 1)[0];
+      saveLibrary();
+      populateTextSelect();
+      const nextIdx = Math.min(currentTextIndex, Math.max(0, appData.texts.length - 1));
+      if (appData.texts.length > 0) {
+        textSelect.value = String(nextIdx);
+      }
+      renderText(nextIdx);
+      setStatusMsg(`Текст «${removed?.title || "без названия"}» удалён из памяти (осталось: ${appData.texts.length}).`, false);
+    });
+
     loadJsonBtn.addEventListener("click", () => {
       const file = jsonFileInput.files && jsonFileInput.files[0];
       if (!file) {
@@ -989,12 +1142,14 @@
             return;
           }
 
-          appData = parsed;
+          const targetIdx = mergeImportedData(parsed);
           wordMap = buildWordMap(appData.words);
           populateTextSelect();
+          const selectIdx = Math.min(targetIdx, Math.max(0, appData.texts.length - 1));
+          textSelect.value = String(selectIdx);
           practiceSpoiler.open = false;
-          renderText(0);
-          setStatusMsg(`Загружен файл «${file.name}» (${appData.words.length} слов, ${appData.texts.length} текстов).`, false);
+          renderText(selectIdx);
+          setStatusMsg(`Добавлено из «${file.name}»: +${parsed.texts.length} текстов (всего в памяти: ${appData.texts.length}).`, false);
         } catch (err) {
           setStatusMsg("Не удалось прочитать JSON: проверьте синтаксис файла.", true);
         }
@@ -1236,10 +1391,11 @@
       renderPractice(currentTextIndex);
     });
 
-    // Initial render with embedded DEFAULT_DATA
+    // Initial render from saved library (or DEFAULT_DATA)
     wordMap = buildWordMap(appData.words);
     populateTextSelect();
     renderText(0);
+    setStatusMsg(`В памяти: ${appData.words.length} слов, ${appData.texts.length} текстов.`, false);
 
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
       window.addEventListener("load", () => {

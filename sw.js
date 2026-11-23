@@ -1,4 +1,4 @@
-const CACHE_NAME = "hanzireader-pwa-v2";
+const CACHE_NAME = "hanzireader-pwa-v3";
 const SHARE_CACHE = "hanzireader-share-v1";
 const ASSETS = [
   "./",

@@ -589,6 +589,87 @@
       background-color: #fef2f2;
     }
 
+    .practice-toolbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .btn-icon-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-icon-ghost:hover {
+      background: #f8fafc;
+      color: var(--text-main);
+    }
+
+    .writing-row {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+    }
+
+    .writing-meaning {
+      font-size: 14px;
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    .writing-input {
+      width: 100%;
+      font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      font-size: 18px;
+      padding: 7px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.15s, background-color 0.15s;
+    }
+
+    .writing-input:focus {
+      border-color: var(--accent);
+    }
+
+    .writing-input.correct {
+      background-color: #dcfce7;
+      border-color: #22c55e;
+      color: #166534;
+    }
+
+    .writing-input.partial {
+      background-color: #fef9c3;
+      border-color: #eab308;
+      color: #854d0e;
+    }
+
+    .writing-input.incorrect {
+      background-color: #fef2f2;
+      border-color: #ef4444;
+      color: #991b1b;
+    }
+
     @media (max-width: 600px) {
       .toolbar {
         padding: 14px;
@@ -634,7 +715,12 @@
       .practice-body {
         padding: 0 16px 18px;
       }
-      .practice-row {
+      .practice-toolbar {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .practice-row,
+      .writing-row {
         grid-template-columns: 1fr;
       }
       .practice-hanzi {
@@ -647,7 +733,7 @@
   <div class="container">
     <div class="app-meta">
       <span>HanziReader</span>
-      <span class="version-badge">Версия v2</span>
+      <span class="version-badge">Версия v3</span>
     </div>
     <div class="toolbar">
       <div class="file-group">
@@ -698,6 +784,13 @@
             <option value="'ZCOOL XiaoWei', serif">Книжный мягкий (ZCOOL XiaoWei)</option>
           </select>
           <button type="button" id="toggleTranslationBtn" class="btn-ghost">Показать перевод</button>
+          <button type="button" id="eraseTextStatusesBtn" class="btn-delete" title="Сбросить статусы изученных слов в этом тексте" aria-label="Сбросить статусы изученных слов в этом тексте">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"></path>
+              <path d="M22 21H7"></path>
+              <path d="m5 11 9 9"></path>
+            </svg>
+          </button>
         </div>
       </div>
 
@@ -715,10 +808,49 @@
       </summary>
       <div class="practice-body">
         <div class="practice-toolbar">
-          <span>Подбери пиньинь и перевод для каждого слова из словаря</span>
-          <button type="button" id="resetPracticeBtn" class="btn-ghost">Сбросить</button>
+          <span>Подбери пиньинь и перевод для каждого слова</span>
+          <div class="practice-toolbar-actions">
+            <button type="button" id="shufflePracticeBtn" class="btn-icon-ghost" title="Перемешать строки" aria-label="Перемешать строки">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="16 3 21 3 21 8"></polyline>
+                <line x1="4" y1="20" x2="21" y2="3"></line>
+                <polyline points="21 16 21 21 16 21"></polyline>
+                <line x1="15" y1="15" x2="21" y2="21"></line>
+                <line x1="4" y1="4" x2="9" y2="9"></line>
+              </svg>
+            </button>
+            <button type="button" id="resetPracticeBtn" class="btn-ghost">Сбросить</button>
+          </div>
         </div>
         <div id="practiceList" class="practice-list"></div>
+      </div>
+    </details>
+
+    <details id="writingSpoiler" class="practice-spoiler">
+      <summary class="practice-summary">
+        <span class="practice-summary-left">
+          <span class="practice-chevron">▶</span>
+          <span>Написание</span>
+        </span>
+        <span id="writingCount" class="practice-count">0 / 0</span>
+      </summary>
+      <div class="practice-body">
+        <div class="practice-toolbar">
+          <span>Введи иероглифы с клавиатуры по значению</span>
+          <div class="practice-toolbar-actions">
+            <button type="button" id="shuffleWritingBtn" class="btn-icon-ghost" title="Перемешать строки" aria-label="Перемешать строки">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="16 3 21 3 21 8"></polyline>
+                <line x1="4" y1="20" x2="21" y2="3"></line>
+                <polyline points="21 16 21 21 16 21"></polyline>
+                <line x1="15" y1="15" x2="21" y2="21"></line>
+                <line x1="4" y1="4" x2="9" y2="9"></line>
+              </svg>
+            </button>
+            <button type="button" id="resetWritingBtn" class="btn-ghost">Сбросить</button>
+          </div>
+        </div>
+        <div id="writingList" class="practice-list"></div>
       </div>
     </details>
   </div>
@@ -799,7 +931,14 @@
     const practiceSpoiler = document.getElementById("practiceSpoiler");
     const practiceCount = document.getElementById("practiceCount");
     const practiceList = document.getElementById("practiceList");
+    const eraseTextStatusesBtn = document.getElementById("eraseTextStatusesBtn");
+    const shufflePracticeBtn = document.getElementById("shufflePracticeBtn");
     const resetPracticeBtn = document.getElementById("resetPracticeBtn");
+    const writingSpoiler = document.getElementById("writingSpoiler");
+    const writingCount = document.getElementById("writingCount");
+    const writingList = document.getElementById("writingList");
+    const shuffleWritingBtn = document.getElementById("shuffleWritingBtn");
+    const resetWritingBtn = document.getElementById("resetWritingBtn");
 
     const popover = document.getElementById("wordPopover");
     const popHanzi = document.getElementById("popHanzi");
@@ -949,6 +1088,7 @@
         readerTitle.textContent = "Текст не найден";
         translationBox.textContent = "";
         renderPractice(index);
+        renderWriting(index);
         return;
       }
 
@@ -1005,6 +1145,7 @@
 
       chineseText.appendChild(frag);
       renderPractice(index);
+      renderWriting(index);
     }
 
     function showPopover(word, targetSpan) {
@@ -1140,6 +1281,7 @@
         const selectIdx = Math.min(targetIdx, Math.max(0, appData.texts.length - 1));
         textSelect.value = String(selectIdx);
         practiceSpoiler.open = false;
+        writingSpoiler.open = false;
         renderText(selectIdx);
         setStatusMsg(`Добавлено из «${sourceName}»: +${parsed.texts.length} текстов (всего в памяти: ${appData.texts.length}).`, false);
         return true;
@@ -1325,10 +1467,21 @@
       });
     }
 
-    function renderPractice(index = currentTextIndex) {
+    function shuffleArray(arr) {
+      const copy = arr.slice();
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function renderPractice(index = currentTextIndex, customWords = null) {
       practiceList.innerHTML = "";
-      currentPracticeWords = getWordsForText(index);
-      const words = currentPracticeWords;
+      if (!customWords) {
+        currentPracticeWords = getWordsForText(index);
+      }
+      const words = customWords || currentPracticeWords;
       if (words.length === 0) {
         practiceCount.textContent = "0 / 0";
         return;
@@ -1414,8 +1567,103 @@
       updatePracticeCounter();
     }
 
+    function updateWritingCounter() {
+      const inputs = writingList.querySelectorAll(".writing-input");
+      let solved = 0;
+      inputs.forEach((inp) => {
+        if (inp.classList.contains("correct")) solved += 1;
+      });
+      writingCount.textContent = `${solved} / ${currentPracticeWords.length}`;
+    }
+
+    function renderWriting(index = currentTextIndex, customWords = null) {
+      writingList.innerHTML = "";
+      const words = customWords || getWordsForText(index);
+      if (words.length === 0) {
+        writingCount.textContent = "0 / 0";
+        return;
+      }
+
+      const frag = document.createDocumentFragment();
+
+      words.forEach((word) => {
+        const row = document.createElement("div");
+        row.className = "writing-row";
+
+        const meaningEl = document.createElement("div");
+        meaningEl.className = "writing-meaning";
+        meaningEl.textContent = word.meaning_ru || "";
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "writing-input";
+        input.placeholder = "Введи иероглифы…";
+        input.autocomplete = "off";
+        input.spellcheck = false;
+        input.setAttribute("aria-label", `Иероглифы для: ${word.meaning_ru || ""}`);
+
+        const targetChars = Array.from(word.hanzi || "");
+
+        input.addEventListener("input", () => {
+          const val = input.value.trim();
+          input.classList.remove("correct", "partial", "incorrect");
+
+          if (!val) {
+            updateWritingCounter();
+            return;
+          }
+
+          if (val === word.hanzi) {
+            input.classList.add("correct");
+          } else {
+            const inputChars = Array.from(val);
+            const hasMatchingChar = targetChars.length >= 2 && inputChars.some((ch) => targetChars.includes(ch));
+            if (hasMatchingChar) {
+              input.classList.add("partial");
+            } else {
+              input.classList.add("incorrect");
+            }
+          }
+          updateWritingCounter();
+        });
+
+        row.appendChild(meaningEl);
+        row.appendChild(input);
+        frag.appendChild(row);
+      });
+
+      writingList.appendChild(frag);
+      updateWritingCounter();
+    }
+
+    eraseTextStatusesBtn.addEventListener("click", () => {
+      if (currentPracticeWords.length === 0) return;
+      currentPracticeWords.forEach((word) => {
+        delete wordStatuses[word.hanzi];
+      });
+      saveStatuses();
+      applyStatusesToCurrentText();
+      hidePopoverImmediate();
+      const title = (appData.texts && appData.texts[currentTextIndex]?.title) || "текущего текста";
+      setStatusMsg(`Статусы изученных слов сброшены для «${title}».`, false);
+    });
+
+    shufflePracticeBtn.addEventListener("click", () => {
+      const shuffled = shuffleArray(currentPracticeWords);
+      renderPractice(currentTextIndex, shuffled);
+    });
+
     resetPracticeBtn.addEventListener("click", () => {
       renderPractice(currentTextIndex);
+    });
+
+    shuffleWritingBtn.addEventListener("click", () => {
+      const shuffled = shuffleArray(currentPracticeWords);
+      renderWriting(currentTextIndex, shuffled);
+    });
+
+    resetWritingBtn.addEventListener("click", () => {
+      renderWriting(currentTextIndex);
     });
 
     // Initial render from saved library (or DEFAULT_DATA)

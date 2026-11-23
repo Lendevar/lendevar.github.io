@@ -647,7 +647,7 @@
   <div class="container">
     <div class="app-meta">
       <span>HanziReader</span>
-      <span class="version-badge">Версия v1</span>
+      <span class="version-badge">Версия v2</span>
     </div>
     <div class="toolbar">
       <div class="file-group">
@@ -1126,6 +1126,50 @@
       setStatusMsg(`Текст «${removed?.title || "без названия"}» удалён из памяти (осталось: ${appData.texts.length}).`, false);
     });
 
+    function importJsonContent(rawText, sourceName) {
+      try {
+        const parsed = JSON.parse(rawText);
+        if (!Array.isArray(parsed.words) || !Array.isArray(parsed.texts)) {
+          setStatusMsg("Ошибка: в JSON должны быть массивы 'words' и 'texts'.", true);
+          return false;
+        }
+
+        const targetIdx = mergeImportedData(parsed);
+        wordMap = buildWordMap(appData.words);
+        populateTextSelect();
+        const selectIdx = Math.min(targetIdx, Math.max(0, appData.texts.length - 1));
+        textSelect.value = String(selectIdx);
+        practiceSpoiler.open = false;
+        renderText(selectIdx);
+        setStatusMsg(`Добавлено из «${sourceName}»: +${parsed.texts.length} текстов (всего в памяти: ${appData.texts.length}).`, false);
+        return true;
+      } catch (err) {
+        setStatusMsg("Не удалось прочитать JSON: проверьте синтаксис файла.", true);
+        return false;
+      }
+    }
+
+    async function checkSharedPayload() {
+      try {
+        const params = new URLSearchParams(location.search);
+        if (params.get("shared") !== "1" || !("caches" in window)) return;
+
+        const shareCache = await caches.open("hanzireader-share-v1");
+        const cacheKey = new URL("./shared-json-payload", location.href).href;
+        const response = await shareCache.match(cacheKey);
+        if (response) {
+          const text = await response.text();
+          const rawName = response.headers.get("X-Shared-Filename");
+          const fileName = rawName ? decodeURIComponent(rawName) : "shared.json";
+          await shareCache.delete(cacheKey);
+          importJsonContent(text, fileName);
+        }
+        history.replaceState(null, "", location.pathname);
+      } catch (e) {
+        // Ignore cache/history restrictions in sandboxed environments
+      }
+    }
+
     loadJsonBtn.addEventListener("click", () => {
       const file = jsonFileInput.files && jsonFileInput.files[0];
       if (!file) {
@@ -1135,24 +1179,7 @@
 
       const reader = new FileReader();
       reader.onload = (event) => {
-        try {
-          const parsed = JSON.parse(event.target.result);
-          if (!Array.isArray(parsed.words) || !Array.isArray(parsed.texts)) {
-            setStatusMsg("Ошибка: в JSON должны быть массивы 'words' и 'texts'.", true);
-            return;
-          }
-
-          const targetIdx = mergeImportedData(parsed);
-          wordMap = buildWordMap(appData.words);
-          populateTextSelect();
-          const selectIdx = Math.min(targetIdx, Math.max(0, appData.texts.length - 1));
-          textSelect.value = String(selectIdx);
-          practiceSpoiler.open = false;
-          renderText(selectIdx);
-          setStatusMsg(`Добавлено из «${file.name}»: +${parsed.texts.length} текстов (всего в памяти: ${appData.texts.length}).`, false);
-        } catch (err) {
-          setStatusMsg("Не удалось прочитать JSON: проверьте синтаксис файла.", true);
-        }
+        importJsonContent(event.target.result, file.name);
       };
       reader.onerror = () => {
         setStatusMsg("Ошибка чтения файла.", true);
@@ -1396,6 +1423,7 @@
     populateTextSelect();
     renderText(0);
     setStatusMsg(`В памяти: ${appData.words.length} слов, ${appData.texts.length} текстов.`, false);
+    checkSharedPayload();
 
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
       window.addEventListener("load", () => {

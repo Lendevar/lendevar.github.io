@@ -247,6 +247,337 @@
       border: 1px solid rgba(15, 23, 42, 0.1);
     }
 
+    /* Vocab / Anki Block */
+    .vocab-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+      margin-bottom: 20px;
+    }
+
+    .vocab-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .vocab-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .vocab-badge {
+      font-size: 12px;
+      color: var(--text-muted);
+      background: #f1f5f9;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .btn-cards {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #eff6ff;
+      color: var(--accent);
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn-cards:hover {
+      background: #dbeafe;
+      border-color: #93c5fd;
+    }
+
+    /* Anki Modal */
+    .anki-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.52);
+      backdrop-filter: blur(2px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .anki-overlay.open {
+      display: flex;
+    }
+
+    .anki-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 440px;
+      min-height: 360px;
+      padding: 20px 22px 22px;
+      box-shadow: 0 20px 44px rgba(15, 23, 42, 0.22);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .anki-top {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .anki-counter {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: #f1f5f9;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .anki-close-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .anki-close-btn:hover {
+      background: #f1f5f9;
+      color: var(--text-main);
+    }
+
+    .anki-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      padding: 20px 8px;
+      text-align: center;
+    }
+
+    .anki-hanzi {
+      font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      font-size: 54px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .anki-reveal-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-width: 140px;
+      max-width: 100%;
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      background: #f1f5f9;
+      color: #64748b;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .anki-reveal-btn:hover {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    .anki-reveal-btn.revealed-pinyin {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #dc2626;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .anki-reveal-btn.revealed-meaning {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+      color: #1e3a8a;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .anki-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      min-height: 40px;
+    }
+
+    .anki-next-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 40px;
+      border: none;
+      border-radius: 10px;
+      color: #ffffff;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.15s;
+    }
+
+    .anki-next-btn:hover {
+      opacity: 0.92;
+    }
+
+    .anki-next-btn:active {
+      transform: scale(0.97);
+    }
+
+    .anki-next-btn.status-learning {
+      background: #3b82f6;
+    }
+
+    .anki-next-btn.status-learned {
+      background: #22c55e;
+    }
+
+    .vocab-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .anki-write-input {
+      width: 100%;
+      max-width: 260px;
+      text-align: center;
+      font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      font-size: 32px;
+      font-weight: 600;
+      padding: 10px 14px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+    }
+
+    .anki-write-input:focus {
+      border-color: var(--accent);
+    }
+
+    .anki-write-input.correct {
+      background-color: #dcfce7;
+      border-color: #22c55e;
+      color: #166534;
+    }
+
+    .anki-write-input.partial {
+      background-color: #fef9c3;
+      border-color: #eab308;
+      color: #854d0e;
+    }
+
+    .anki-write-input.incorrect {
+      background-color: #fef2f2;
+      border-color: #ef4444;
+      color: #991b1b;
+    }
+
+    .anki-hanzi-revealed {
+      color: #16a34a;
+    }
+
+    .anki-meaning-static {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+      padding: 6px 12px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      max-width: 100%;
+    }
+
+    .anki-eye-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 40px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #f8fafc;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .anki-eye-btn:hover {
+      background: #e2e8f0;
+      color: var(--text-main);
+    }
+
+    .stats-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .stats-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      color: var(--text-main);
+    }
+
+    .stats-val {
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--accent);
+    }
+
+    .anki-empty-msg {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
     /* Reader Card */
     .reader-card {
       background: var(--surface);
@@ -464,210 +795,141 @@
       color: #ffffff;
     }
 
-    /* Practice Spoiler ("Закрепление") */
-    .practice-spoiler {
-      margin-top: 20px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-      overflow: hidden;
+    /* Match ("Закрепление") Modal */
+    .anki-modal.match-modal {
+      max-width: 580px;
     }
 
-    .practice-summary {
-      padding: 16px 24px;
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--text-main);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      list-style: none;
-      user-select: none;
-      transition: background 0.15s;
-    }
-
-    .practice-summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .practice-summary:hover {
-      background: #f8fafc;
-    }
-
-    .practice-summary-left {
-      display: flex;
-      align-items: center;
+    .match-slots {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
+      width: 100%;
+      margin: 14px 0 18px;
     }
 
-    .practice-chevron {
-      display: inline-block;
-      font-size: 12px;
-      color: var(--text-muted);
-      transition: transform 0.15s ease;
-    }
-
-    .practice-spoiler[open] .practice-chevron {
-      transform: rotate(90deg);
-    }
-
-    .practice-count {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-muted);
-      background: #f1f5f9;
-      padding: 3px 10px;
-      border-radius: 999px;
-    }
-
-    .practice-body {
-      padding: 0 24px 22px;
-      border-top: 1px solid #f1f5f9;
-    }
-
-    .practice-toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .practice-list {
+    .match-slot {
+      min-height: 82px;
+      padding: 10px 8px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: #f8fafc;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-    }
-
-    .practice-row {
-      display: grid;
-      grid-template-columns: 90px 1fr 1.4fr;
-      gap: 12px;
       align-items: center;
-      padding: 10px 12px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
+      justify-content: center;
+      text-align: center;
+      gap: 4px;
+      transition: border-color 0.15s, background-color 0.15s, box-shadow 0.15s;
     }
 
-    .practice-hanzi {
-      font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-      font-size: 22px;
+    .match-slot-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .match-slot-value {
+      font-size: 15px;
       font-weight: 600;
       color: var(--text-main);
-      text-align: center;
+      word-break: break-word;
     }
 
-    .practice-select {
-      width: 100%;
-      font-family: inherit;
-      font-size: 13px;
-      padding: 8px 10px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
+    .match-slot[data-slot="hanzi"] .match-slot-value {
+      font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      font-size: 24px;
+    }
+
+    .match-slot.active {
+      border-color: var(--accent);
+      background: #eff6ff;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+    }
+
+    .match-slot.prefilled {
       background: #ffffff;
-      color: var(--text-main);
-      cursor: pointer;
-      transition: border-color 0.15s, background-color 0.15s;
+      border-color: #cbd5e1;
     }
 
-    .practice-select.correct,
-    .practice-select.correct:disabled {
-      background-color: #dcfce7;
+    .match-slot.prefilled .match-slot-value {
+      color: #0f172a;
+    }
+
+    .match-slot.solved {
+      background: #dcfce7;
       border-color: #22c55e;
+    }
+
+    .match-slot.solved .match-slot-value {
       color: #166534;
-      font-weight: 500;
-      opacity: 1;
-      cursor: default;
     }
 
-    .practice-select.incorrect {
-      border-color: #ef4444;
-      background-color: #fef2f2;
-    }
-
-    .practice-toolbar-actions {
+    .match-options {
       display: flex;
-      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
       gap: 8px;
-      flex-shrink: 0;
+      width: 100%;
+      min-height: 44px;
     }
 
-    .btn-icon-ghost {
+    .match-opt-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
-      background: transparent;
+      padding: 7px 13px;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 6px 10px;
-      font-family: inherit;
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .btn-icon-ghost:hover {
-      background: #f8fafc;
-      color: var(--text-main);
-    }
-
-    .writing-row {
-      display: grid;
-      grid-template-columns: 1.3fr 1fr;
-      gap: 12px;
-      align-items: center;
-      padding: 10px 12px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-    }
-
-    .writing-meaning {
-      font-size: 14px;
-      color: var(--text-main);
-      font-weight: 500;
-    }
-
-    .writing-input {
-      width: 100%;
-      font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-      font-size: 18px;
-      padding: 7px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 9px;
       background: #ffffff;
       color: var(--text-main);
-      outline: none;
-      transition: border-color 0.15s, background-color 0.15s;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.12s, border-color 0.12s, color 0.12s;
     }
 
-    .writing-input:focus {
-      border-color: var(--accent);
+    .match-opt-btn.is-hanzi {
+      font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      font-size: 18px;
+      padding: 6px 14px;
     }
 
-    .writing-input.correct {
-      background-color: #dcfce7;
-      border-color: #22c55e;
-      color: #166534;
+    .match-opt-btn:hover:not(:disabled) {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
     }
 
-    .writing-input.partial {
-      background-color: #fef9c3;
-      border-color: #eab308;
-      color: #854d0e;
-    }
-
-    .writing-input.incorrect {
-      background-color: #fef2f2;
+    .match-opt-btn.wrong,
+    .match-opt-btn:disabled {
+      background: #fef2f2;
       border-color: #ef4444;
-      color: #991b1b;
+      color: #dc2626;
+      cursor: not-allowed;
+      opacity: 0.85;
+    }
+
+    .text-write-card {
+      margin-top: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 24px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .text-write-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
     }
 
     @media (max-width: 600px) {
@@ -709,22 +971,21 @@
       .chinese-text {
         font-size: 22px;
       }
-      .practice-summary {
+      .text-write-card {
         padding: 14px 16px;
       }
-      .practice-body {
-        padding: 0 16px 18px;
+      .match-slots {
+        gap: 6px;
       }
-      .practice-toolbar {
-        flex-wrap: wrap;
-        gap: 8px;
+      .match-slot {
+        min-height: 70px;
+        padding: 8px 4px;
       }
-      .practice-row,
-      .writing-row {
-        grid-template-columns: 1fr;
+      .match-slot-value {
+        font-size: 13px;
       }
-      .practice-hanzi {
-        text-align: left;
+      .match-slot[data-slot="hanzi"] .match-slot-value {
+        font-size: 20px;
       }
     }
   </style>
@@ -733,7 +994,7 @@
   <div class="container">
     <div class="app-meta">
       <span>HanziReader</span>
-      <span class="version-badge">Версия v3</span>
+      <span class="version-badge">Версия v8</span>
     </div>
     <div class="toolbar">
       <div class="file-group">
@@ -773,6 +1034,31 @@
       </div>
     </div>
 
+    <section class="vocab-card" aria-label="Словарный запас">
+      <div class="vocab-info">
+        <span class="vocab-title">Словарный запас</span>
+        <span id="vocabCountBadge" class="vocab-badge">0 слов</span>
+      </div>
+      <div class="vocab-actions">
+        <button type="button" id="openCardsBtn" class="btn-cards">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="7" width="14" height="14" rx="2"></rect>
+            <path d="M7 7V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-2"></path>
+            <polygon points="10 11 11.2 13.4 13.8 13.8 11.9 15.6 12.3 18.2 10 17 7.7 18.2 8.1 15.6 6.2 13.8 8.8 13.4 10 11"></polygon>
+          </svg>
+          <span>Карточки</span>
+        </button>
+        <button type="button" id="openVocabWriteBtn" class="btn-cards">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="3"></rect>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <span>Написание</span>
+        </button>
+      </div>
+    </section>
+
     <main class="reader-card">
       <div class="reader-header">
         <h1 id="readerTitle" class="reader-title">Мой папа — врач</h1>
@@ -798,61 +1084,28 @@
       <div id="translationBox" class="translation-box"></div>
     </main>
 
-    <details id="practiceSpoiler" class="practice-spoiler">
-      <summary class="practice-summary">
-        <span class="practice-summary-left">
-          <span class="practice-chevron">▶</span>
+    <div class="text-write-card">
+      <span class="text-write-label">Тренажёр по текущему тексту</span>
+      <div class="vocab-actions">
+        <button type="button" id="openMatchBtn" class="btn-cards">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M22 20v-9H2v9"></path>
+            <path d="M2 11V7h4v2h4V7h4v2h4V7h4v4"></path>
+            <path d="M9 20v-5a3 3 0 0 1 6 0v5"></path>
+            <path d="M2 20h20"></path>
+          </svg>
           <span>Закрепление</span>
-        </span>
-        <span id="practiceCount" class="practice-count">0 / 0</span>
-      </summary>
-      <div class="practice-body">
-        <div class="practice-toolbar">
-          <span>Подбери пиньинь и перевод для каждого слова</span>
-          <div class="practice-toolbar-actions">
-            <button type="button" id="shufflePracticeBtn" class="btn-icon-ghost" title="Перемешать строки" aria-label="Перемешать строки">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <polyline points="16 3 21 3 21 8"></polyline>
-                <line x1="4" y1="20" x2="21" y2="3"></line>
-                <polyline points="21 16 21 21 16 21"></polyline>
-                <line x1="15" y1="15" x2="21" y2="21"></line>
-                <line x1="4" y1="4" x2="9" y2="9"></line>
-              </svg>
-            </button>
-            <button type="button" id="resetPracticeBtn" class="btn-ghost">Сбросить</button>
-          </div>
-        </div>
-        <div id="practiceList" class="practice-list"></div>
+        </button>
+        <button type="button" id="openTextWriteBtn" class="btn-cards">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="3"></rect>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+          <span>Написание слов из текста</span>
+        </button>
       </div>
-    </details>
-
-    <details id="writingSpoiler" class="practice-spoiler">
-      <summary class="practice-summary">
-        <span class="practice-summary-left">
-          <span class="practice-chevron">▶</span>
-          <span>Написание</span>
-        </span>
-        <span id="writingCount" class="practice-count">0 / 0</span>
-      </summary>
-      <div class="practice-body">
-        <div class="practice-toolbar">
-          <span>Введи иероглифы с клавиатуры по значению</span>
-          <div class="practice-toolbar-actions">
-            <button type="button" id="shuffleWritingBtn" class="btn-icon-ghost" title="Перемешать строки" aria-label="Перемешать строки">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <polyline points="16 3 21 3 21 8"></polyline>
-                <line x1="4" y1="20" x2="21" y2="3"></line>
-                <polyline points="21 16 21 21 16 21"></polyline>
-                <line x1="15" y1="15" x2="21" y2="21"></line>
-                <line x1="4" y1="4" x2="9" y2="9"></line>
-              </svg>
-            </button>
-            <button type="button" id="resetWritingBtn" class="btn-ghost">Сбросить</button>
-          </div>
-        </div>
-        <div id="writingList" class="practice-list"></div>
-      </div>
-    </details>
+    </div>
   </div>
 
   <!-- HanziCraft-style Hover Popover -->
@@ -870,6 +1123,180 @@
         <button type="button" class="status-btn" data-set-status="unknown">Не знаю</button>
         <button type="button" class="status-btn" data-set-status="learning">Учу</button>
         <button type="button" class="status-btn" data-set-status="learned">Знаю</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Anki Flashcards Modal -->
+  <div id="ankiOverlay" class="anki-overlay" role="dialog" aria-modal="true" aria-labelledby="ankiHanzi">
+    <div class="anki-modal">
+      <div class="anki-top">
+        <span id="ankiCounter" class="anki-counter">0/0</span>
+        <button type="button" id="ankiCloseBtn" class="anki-close-btn" title="Закрыть" aria-label="Закрыть">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div id="ankiCenter" class="anki-center">
+        <button type="button" id="ankiPinyinBtn" class="anki-reveal-btn" aria-label="Показать пиньинь">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 8l6 6"></path>
+            <path d="m4 14 6-6 2-3"></path>
+            <path d="M2 5h12"></path>
+            <path d="M7 2h1"></path>
+            <path d="m22 22-5-10-5 10"></path>
+            <path d="M14 18h6"></path>
+          </svg>
+        </button>
+        <div id="ankiHanzi" class="anki-hanzi"></div>
+        <button type="button" id="ankiMeaningBtn" class="anki-reveal-btn">Значение</button>
+      </div>
+
+      <div class="anki-bottom">
+        <button type="button" id="ankiRestartBtn" class="btn-primary" style="display:none;">Повторить</button>
+        <button type="button" id="ankiNextBtn" class="anki-next-btn status-learning" title="Следующая карточка" aria-label="Следующая карточка">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14"></path>
+            <path d="m13 6 6 6-6 6"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vocab Writing Quiz Modal -->
+  <div id="vocabWriteOverlay" class="anki-overlay" role="dialog" aria-modal="true" aria-label="Тренажёр написания">
+    <div class="anki-modal">
+      <div class="anki-top">
+        <span id="vocabWriteCounter" class="anki-counter">0/0</span>
+        <button type="button" id="vocabWriteCloseBtn" class="anki-close-btn" title="Завершить сессию" aria-label="Завершить сессию">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div id="vocabWriteCenter" class="anki-center">
+        <button type="button" id="vocabWritePinyinBtn" class="anki-reveal-btn" aria-label="Показать пиньинь">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 8l6 6"></path>
+            <path d="m4 14 6-6 2-3"></path>
+            <path d="M2 5h12"></path>
+            <path d="M7 2h1"></path>
+            <path d="m22 22-5-10-5 10"></path>
+            <path d="M14 18h6"></path>
+          </svg>
+        </button>
+        <input type="text" id="vocabWriteInput" class="anki-write-input"  autocomplete="off" spellcheck="false" aria-label="Ввод иероглифов" />
+        <div id="vocabWriteRevealed" class="anki-hanzi anki-hanzi-revealed" style="display:none;"></div>
+        <div id="vocabWriteMeaning" class="anki-meaning-static"></div>
+      </div>
+
+      <div class="anki-bottom">
+        <button type="button" id="vocabWriteEyeBtn" class="anki-eye-btn" title="Показать иероглифы" aria-label="Показать иероглифы">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+        </button>
+        <button type="button" id="vocabWriteNextBtn" class="anki-next-btn status-learning" style="display:none;" title="Следующее слово" aria-label="Следующее слово">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14"></path>
+            <path d="m13 6 6 6-6 6"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Writing Session Stats Modal -->
+  <div id="writeStatsOverlay" class="anki-overlay" role="dialog" aria-modal="true" aria-label="Статистика сессии">
+    <div class="anki-modal">
+      <div class="anki-top">
+        <span class="vocab-title" style="margin-right:auto;">Итоги тренировки</span>
+        <button type="button" id="writeStatsCloseIcon" class="anki-close-btn" title="Закрыть" aria-label="Закрыть">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="anki-center" style="justify-content:flex-start; padding-top:16px;">
+        <div class="stats-list">
+          <div class="stats-item">
+            <span>Всего за сессию</span>
+            <span id="statTotalShown" class="stats-val">0</span>
+          </div>
+          <div class="stats-item">
+            <span>Правильно без подсказок</span>
+            <span id="statCleanCorrect" class="stats-val" style="color:#16a34a;">0</span>
+          </div>
+          <div class="stats-item">
+            <span>С показом пиньинь</span>
+            <span id="statWithPinyin" class="stats-val" style="color:#dc2626;">0</span>
+          </div>
+          <div class="stats-item">
+            <span>С открытием иероглифов</span>
+            <span id="statWithEye" class="stats-val" style="color:#d97706;">0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="anki-bottom" style="justify-content:space-between;">
+        <button type="button" id="writeStatsCloseBtn" class="btn-secondary">Закрыть</button>
+        <button type="button" id="writeStatsRestartBtn" class="btn-primary">Пройти снова</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Match ("Закрепление") Modal -->
+  <div id="matchOverlay" class="anki-overlay" role="dialog" aria-modal="true" aria-label="Закрепление слов из текста">
+    <div class="anki-modal match-modal">
+      <div class="anki-top">
+        <span id="matchCounter" class="anki-counter">0/0</span>
+        <button type="button" id="matchCloseBtn" class="anki-close-btn" title="Закрыть" aria-label="Закрыть">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div id="matchCenter" class="anki-center" style="padding: 12px 4px; gap: 8px;">
+        <div id="matchSlots" class="match-slots">
+          <div class="match-slot" data-slot="hanzi">
+            <span class="match-slot-label">Иероглиф</span>
+            <span id="matchValHanzi" class="match-slot-value"></span>
+          </div>
+          <div class="match-slot" data-slot="pinyin">
+            <span class="match-slot-label">Пиньинь</span>
+            <span id="matchValPinyin" class="match-slot-value"></span>
+          </div>
+          <div class="match-slot" data-slot="meaning">
+            <span class="match-slot-label">Значение</span>
+            <span id="matchValMeaning" class="match-slot-value"></span>
+          </div>
+        </div>
+        <div id="matchOptions" class="match-options"></div>
+      </div>
+
+      <div class="anki-bottom">
+        <button type="button" id="matchRestartBtn" class="btn-primary" style="display:none;">Повторить</button>
+        <button type="button" id="matchNextBtn" class="anki-next-btn status-learning" style="display:none;" title="Следующее слово" aria-label="Следующее слово">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14"></path>
+            <path d="m13 6 6 6-6 6"></path>
+          </svg>
+        </button>
       </div>
     </div>
   </div>
@@ -928,17 +1355,9 @@
     const translationBox = document.getElementById("translationBox");
     const toggleTranslationBtn = document.getElementById("toggleTranslationBtn");
     const fontSelect = document.getElementById("fontSelect");
-    const practiceSpoiler = document.getElementById("practiceSpoiler");
-    const practiceCount = document.getElementById("practiceCount");
-    const practiceList = document.getElementById("practiceList");
     const eraseTextStatusesBtn = document.getElementById("eraseTextStatusesBtn");
-    const shufflePracticeBtn = document.getElementById("shufflePracticeBtn");
-    const resetPracticeBtn = document.getElementById("resetPracticeBtn");
-    const writingSpoiler = document.getElementById("writingSpoiler");
-    const writingCount = document.getElementById("writingCount");
-    const writingList = document.getElementById("writingList");
-    const shuffleWritingBtn = document.getElementById("shuffleWritingBtn");
-    const resetWritingBtn = document.getElementById("resetWritingBtn");
+    const openMatchBtn = document.getElementById("openMatchBtn");
+    const openTextWriteBtn = document.getElementById("openTextWriteBtn");
 
     const popover = document.getElementById("wordPopover");
     const popHanzi = document.getElementById("popHanzi");
@@ -1044,8 +1463,230 @@
       }
     }
 
+    function getWordRecord(hanzi) {
+      const entry = wordStatuses[hanzi];
+      if (!entry) return null;
+      if (typeof entry === "string") {
+        return { status: entry, pinyin: "", meaning_ru: "" };
+      }
+      if (typeof entry === "object" && entry.status) {
+        return entry;
+      }
+      return null;
+    }
+
     function getWordStatus(hanzi) {
-      return wordStatuses[hanzi] || "unknown";
+      const rec = getWordRecord(hanzi);
+      return rec ? rec.status : "unknown";
+    }
+
+    function setWordStatusRecord(word, newStatus) {
+      if (!word || !word.hanzi) return;
+      if (newStatus === "unknown") {
+        delete wordStatuses[word.hanzi];
+      } else {
+        wordStatuses[word.hanzi] = {
+          status: newStatus,
+          pinyin: word.pinyin || "",
+          meaning_ru: word.meaning_ru || ""
+        };
+      }
+      saveStatuses();
+      const matchOverlay = document.getElementById("matchOverlay");
+    const matchCounter = document.getElementById("matchCounter");
+    const matchCloseBtn = document.getElementById("matchCloseBtn");
+    const matchCenter = document.getElementById("matchCenter");
+    const matchSlots = document.getElementById("matchSlots");
+    const matchSlotEls = {
+      hanzi: matchSlots.querySelector('[data-slot="hanzi"]'),
+      pinyin: matchSlots.querySelector('[data-slot="pinyin"]'),
+      meaning: matchSlots.querySelector('[data-slot="meaning"]')
+    };
+    const matchValEls = {
+      hanzi: document.getElementById("matchValHanzi"),
+      pinyin: document.getElementById("matchValPinyin"),
+      meaning: document.getElementById("matchValMeaning")
+    };
+    const matchOptions = document.getElementById("matchOptions");
+    const matchNextBtn = document.getElementById("matchNextBtn");
+    const matchRestartBtn = document.getElementById("matchRestartBtn");
+
+    const SLOT_KEYS = ["hanzi", "pinyin", "meaning"];
+    let matchDeck = [];
+    let matchIndex = 0;
+    let matchCardState = {
+      prefilled: "hanzi",
+      filled: { hanzi: false, pinyin: false, meaning: false },
+      activeSlot: null
+    };
+
+    function getMatchWordValue(word, slotKey) {
+      if (slotKey === "hanzi") return word.hanzi || "";
+      if (slotKey === "pinyin") return word.pinyin || "";
+      return word.meaning_ru || "";
+    }
+
+    function getNextUnfilledSlot() {
+      for (const key of SLOT_KEYS) {
+        if (!matchCardState.filled[key]) return key;
+      }
+      return null;
+    }
+
+    function renderMatchOptions() {
+      matchOptions.innerHTML = "";
+      const activeKey = matchCardState.activeSlot;
+      if (!activeKey || matchIndex >= matchDeck.length) return;
+
+      const currentWord = matchDeck[matchIndex];
+      const expectedValue = getMatchWordValue(currentWord, activeKey);
+
+      const values = Array.from(new Set(
+        currentPracticeWords.map((w) => getMatchWordValue(w, activeKey)).filter(Boolean)
+      ));
+
+      if (activeKey === "pinyin") {
+        values.sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
+      } else if (activeKey === "meaning") {
+        values.sort((a, b) => a.localeCompare(b, "ru", { sensitivity: "base" }));
+      }
+
+      const frag = document.createDocumentFragment();
+      values.forEach((val) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "match-opt-btn" + (activeKey === "hanzi" ? " is-hanzi" : "");
+        btn.textContent = val;
+
+        btn.addEventListener("click", () => {
+          if (val === expectedValue) {
+            matchCardState.filled[activeKey] = true;
+            matchValEls[activeKey].textContent = val;
+            matchSlotEls[activeKey].classList.remove("active");
+            matchSlotEls[activeKey].classList.add("solved");
+
+            const nextSlot = getNextUnfilledSlot();
+            matchCardState.activeSlot = nextSlot;
+            if (nextSlot) {
+              matchSlotEls[nextSlot].classList.add("active");
+              renderMatchOptions();
+            } else {
+              matchOptions.innerHTML = "";
+              matchNextBtn.style.display = "inline-flex";
+            }
+          } else {
+            btn.classList.add("wrong");
+            btn.disabled = true;
+          }
+        });
+
+        frag.appendChild(btn);
+      });
+
+      matchOptions.appendChild(frag);
+    }
+
+    function renderMatchCard() {
+      const total = matchDeck.length;
+      matchCounter.textContent = `${matchIndex}/${total}`;
+
+      const existingEmpty = matchCenter.querySelector(".anki-empty-msg");
+      if (existingEmpty) existingEmpty.remove();
+
+      if (total === 0) {
+        matchSlots.style.display = "none";
+        matchOptions.style.display = "none";
+        matchNextBtn.style.display = "none";
+        matchRestartBtn.style.display = "none";
+        const emptyEl = document.createElement("div");
+        emptyEl.className = "anki-empty-msg";
+        emptyEl.textContent = "В текущем тексте нет слов из словаря.";
+        matchCenter.appendChild(emptyEl);
+        return;
+      }
+
+      if (matchIndex >= total) {
+        matchSlots.style.display = "none";
+        matchOptions.style.display = "none";
+        matchNextBtn.style.display = "none";
+        matchRestartBtn.style.display = "inline-flex";
+        const doneEl = document.createElement("div");
+        doneEl.className = "anki-hanzi";
+        doneEl.textContent = "Готово!";
+        doneEl.classList.add("anki-empty-msg");
+        doneEl.style.fontSize = "36px";
+        doneEl.style.color = "var(--text-main)";
+        matchCenter.appendChild(doneEl);
+        return;
+      }
+
+      const word = matchDeck[matchIndex];
+      matchSlots.style.display = "grid";
+      matchOptions.style.display = "flex";
+      matchRestartBtn.style.display = "none";
+      matchNextBtn.style.display = "none";
+
+      const status = getWordStatus(word.hanzi);
+      matchNextBtn.classList.remove("status-learning", "status-learned");
+      matchNextBtn.classList.add(status === "learned" ? "status-learned" : "status-learning");
+
+      const prefilledKey = SLOT_KEYS[Math.floor(Math.random() * SLOT_KEYS.length)];
+      matchCardState = {
+        prefilled: prefilledKey,
+        filled: {
+          hanzi: prefilledKey === "hanzi",
+          pinyin: prefilledKey === "pinyin",
+          meaning: prefilledKey === "meaning"
+        },
+        activeSlot: null
+      };
+
+      SLOT_KEYS.forEach((key) => {
+        const slotEl = matchSlotEls[key];
+        const valEl = matchValEls[key];
+        slotEl.classList.remove("active", "prefilled", "solved");
+        if (key === prefilledKey) {
+          slotEl.classList.add("prefilled");
+          valEl.textContent = getMatchWordValue(word, key);
+        } else {
+          valEl.textContent = "";
+        }
+      });
+
+      const firstActive = getNextUnfilledSlot();
+      matchCardState.activeSlot = firstActive;
+      if (firstActive) {
+        matchSlotEls[firstActive].classList.add("active");
+      }
+
+      renderMatchOptions();
+    }
+
+    function startMatchQuiz() {
+      matchDeck = shuffleArray(currentPracticeWords);
+      matchIndex = 0;
+      renderMatchCard();
+      matchOverlay.classList.add("open");
+    }
+
+    openMatchBtn.addEventListener("click", startMatchQuiz);
+    matchCloseBtn.addEventListener("click", () => {
+      matchOverlay.classList.remove("open");
+    });
+    matchOverlay.addEventListener("click", (e) => {
+      if (e.target === matchOverlay) {
+        matchOverlay.classList.remove("open");
+      }
+    });
+    matchNextBtn.addEventListener("click", () => {
+      if (matchIndex < matchDeck.length) {
+        matchIndex += 1;
+        renderMatchCard();
+      }
+    });
+    matchRestartBtn.addEventListener("click", startMatchQuiz);
+
+    updateVocabBadge();
     }
 
     function buildWordMap(words) {
@@ -1087,8 +1728,7 @@
       if (!appData.texts || !appData.texts[index]) {
         readerTitle.textContent = "Текст не найден";
         translationBox.textContent = "";
-        renderPractice(index);
-        renderWriting(index);
+        currentPracticeWords = [];
         return;
       }
 
@@ -1144,8 +1784,7 @@
       });
 
       chineseText.appendChild(frag);
-      renderPractice(index);
-      renderWriting(index);
+      currentPracticeWords = getWordsForText(index);
     }
 
     function showPopover(word, targetSpan) {
@@ -1224,8 +1863,7 @@
       btn.addEventListener("click", () => {
         if (!activeWord) return;
         const newStatus = btn.dataset.setStatus;
-        wordStatuses[activeWord.hanzi] = newStatus;
-        saveStatuses();
+        setWordStatusRecord(activeWord, newStatus);
 
         statusButtons.forEach((b) => {
           b.classList.toggle("active", b.dataset.setStatus === newStatus);
@@ -1280,8 +1918,6 @@
         populateTextSelect();
         const selectIdx = Math.min(targetIdx, Math.max(0, appData.texts.length - 1));
         textSelect.value = String(selectIdx);
-        practiceSpoiler.open = false;
-        writingSpoiler.open = false;
         renderText(selectIdx);
         setStatusMsg(`Добавлено из «${sourceName}»: +${parsed.texts.length} текстов (всего в памяти: ${appData.texts.length}).`, false);
         return true;
@@ -1337,9 +1973,15 @@
 
     exportProgressBtn.addEventListener("click", () => {
       const filtered = {};
-      Object.entries(wordStatuses).forEach(([hanzi, status]) => {
-        if (status === "learning" || status === "learned") {
-          filtered[hanzi] = status;
+      Object.entries(wordStatuses).forEach(([hanzi]) => {
+        const rec = getWordRecord(hanzi);
+        if (rec && (rec.status === "learning" || rec.status === "learned")) {
+          const fromLib = appData.words.find((w) => w.hanzi === hanzi);
+          filtered[hanzi] = {
+            status: rec.status,
+            pinyin: rec.pinyin || fromLib?.pinyin || "",
+            meaning_ru: rec.meaning_ru || fromLib?.meaning_ru || ""
+          };
         }
       });
 
@@ -1382,15 +2024,21 @@
               ? parsed.statuses
               : parsed;
 
-            Object.entries(source).forEach(([hanzi, status]) => {
-              if (typeof hanzi === "string" && validStatuses.has(status)) {
-                if (status === "unknown") {
-                  delete wordStatuses[hanzi];
-                } else {
-                  wordStatuses[hanzi] = status;
-                }
-                importedCount += 1;
+            Object.entries(source).forEach(([hanzi, val]) => {
+              if (typeof hanzi !== "string") return;
+              const status = typeof val === "string" ? val : val?.status;
+              if (!validStatuses.has(status)) return;
+              if (status === "unknown") {
+                delete wordStatuses[hanzi];
+              } else {
+                const fromLib = appData.words.find((w) => w.hanzi === hanzi);
+                wordStatuses[hanzi] = {
+                  status,
+                  pinyin: (typeof val === "object" && val?.pinyin) || fromLib?.pinyin || "",
+                  meaning_ru: (typeof val === "object" && val?.meaning_ru) || fromLib?.meaning_ru || ""
+                };
               }
+              importedCount += 1;
             });
           } else if (Array.isArray(parsed)) {
             parsed.forEach((item) => {
@@ -1398,7 +2046,12 @@
                 if (item.status === "unknown") {
                   delete wordStatuses[item.hanzi];
                 } else {
-                  wordStatuses[item.hanzi] = item.status;
+                  const fromLib = appData.words.find((w) => w.hanzi === item.hanzi);
+                  wordStatuses[item.hanzi] = {
+                    status: item.status,
+                    pinyin: item.pinyin || fromLib?.pinyin || "",
+                    meaning_ru: item.meaning_ru || fromLib?.meaning_ru || ""
+                  };
                 }
                 importedCount += 1;
               }
@@ -1409,6 +2062,7 @@
           }
 
           saveStatuses();
+          updateVocabBadge();
           applyStatusesToCurrentText();
           setStatusMsg(`Импортировано статусов из «${file.name}»: ${importedCount}.`, false);
         } catch (err) {
@@ -1445,28 +2099,6 @@
       return result;
     }
 
-    function updatePracticeCounter() {
-      const rows = practiceList.querySelectorAll(".practice-row");
-      let solvedWords = 0;
-      rows.forEach((row) => {
-        const pDone = row.querySelector(".pinyin-select")?.classList.contains("correct");
-        const mDone = row.querySelector(".meaning-select")?.classList.contains("correct");
-        if (pDone && mDone) solvedWords += 1;
-      });
-      practiceCount.textContent = `${solvedWords} / ${currentPracticeWords.length}`;
-    }
-
-    function removeOptionFromOtherSelects(selectorClass, solvedSelect, matchedValue) {
-      practiceList.querySelectorAll(`.${selectorClass}`).forEach((sel) => {
-        if (sel === solvedSelect || sel.disabled) return;
-        Array.from(sel.options).forEach((opt) => {
-          if (opt.value === matchedValue) {
-            opt.remove();
-          }
-        });
-      });
-    }
-
     function shuffleArray(arr) {
       const copy = arr.slice();
       for (let i = copy.length - 1; i > 0; i -= 1) {
@@ -1476,200 +2108,380 @@
       return copy;
     }
 
-    function renderPractice(index = currentTextIndex, customWords = null) {
-      practiceList.innerHTML = "";
-      if (!customWords) {
-        currentPracticeWords = getWordsForText(index);
-      }
-      const words = customWords || currentPracticeWords;
-      if (words.length === 0) {
-        practiceCount.textContent = "0 / 0";
-        return;
-      }
-
-      const sortedPinyins = Array.from(new Set(words.map((w) => w.pinyin).filter(Boolean)))
-        .sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
-
-      const sortedMeanings = Array.from(new Set(words.map((w) => w.meaning_ru).filter(Boolean)))
-        .sort((a, b) => a.localeCompare(b, "ru", { sensitivity: "base" }));
-
-      const frag = document.createDocumentFragment();
-
-      words.forEach((word) => {
-        const row = document.createElement("div");
-        row.className = "practice-row";
-
-        const hanziEl = document.createElement("div");
-        hanziEl.className = "practice-hanzi";
-        hanziEl.textContent = word.hanzi;
-
-        const pinyinSelect = document.createElement("select");
-        pinyinSelect.className = "practice-select pinyin-select";
-        pinyinSelect.setAttribute("aria-label", `Пиньинь для ${word.hanzi}`);
-        const pPlaceholder = document.createElement("option");
-        pPlaceholder.value = "";
-        pPlaceholder.textContent = "— пиньинь —";
-        pinyinSelect.appendChild(pPlaceholder);
-        sortedPinyins.forEach((p) => {
-          const opt = document.createElement("option");
-          opt.value = p;
-          opt.textContent = p;
-          pinyinSelect.appendChild(opt);
-        });
-
-        pinyinSelect.addEventListener("change", () => {
-          pinyinSelect.classList.remove("incorrect");
-          if (!pinyinSelect.value) return;
-          if (pinyinSelect.value === word.pinyin) {
-            pinyinSelect.classList.add("correct");
-            pinyinSelect.disabled = true;
-            removeOptionFromOtherSelects("pinyin-select", pinyinSelect, word.pinyin);
-            updatePracticeCounter();
-          } else {
-            pinyinSelect.classList.add("incorrect");
-          }
-        });
-
-        const meaningSelect = document.createElement("select");
-        meaningSelect.className = "practice-select meaning-select";
-        meaningSelect.setAttribute("aria-label", `Значение для ${word.hanzi}`);
-        const mPlaceholder = document.createElement("option");
-        mPlaceholder.value = "";
-        mPlaceholder.textContent = "— значение —";
-        meaningSelect.appendChild(mPlaceholder);
-        sortedMeanings.forEach((m) => {
-          const opt = document.createElement("option");
-          opt.value = m;
-          opt.textContent = m;
-          meaningSelect.appendChild(opt);
-        });
-
-        meaningSelect.addEventListener("change", () => {
-          meaningSelect.classList.remove("incorrect");
-          if (!meaningSelect.value) return;
-          if (meaningSelect.value === word.meaning_ru) {
-            meaningSelect.classList.add("correct");
-            meaningSelect.disabled = true;
-            removeOptionFromOtherSelects("meaning-select", meaningSelect, word.meaning_ru);
-            updatePracticeCounter();
-          } else {
-            meaningSelect.classList.add("incorrect");
-          }
-        });
-
-        row.appendChild(hanziEl);
-        row.appendChild(pinyinSelect);
-        row.appendChild(meaningSelect);
-        frag.appendChild(row);
-      });
-
-      practiceList.appendChild(frag);
-      updatePracticeCounter();
-    }
-
-    function updateWritingCounter() {
-      const inputs = writingList.querySelectorAll(".writing-input");
-      let solved = 0;
-      inputs.forEach((inp) => {
-        if (inp.classList.contains("correct")) solved += 1;
-      });
-      writingCount.textContent = `${solved} / ${currentPracticeWords.length}`;
-    }
-
-    function renderWriting(index = currentTextIndex, customWords = null) {
-      writingList.innerHTML = "";
-      const words = customWords || getWordsForText(index);
-      if (words.length === 0) {
-        writingCount.textContent = "0 / 0";
-        return;
-      }
-
-      const frag = document.createDocumentFragment();
-
-      words.forEach((word) => {
-        const row = document.createElement("div");
-        row.className = "writing-row";
-
-        const meaningEl = document.createElement("div");
-        meaningEl.className = "writing-meaning";
-        meaningEl.textContent = word.meaning_ru || "";
-
-        const input = document.createElement("input");
-        input.type = "text";
-        input.className = "writing-input";
-        input.placeholder = "Введи иероглифы…";
-        input.autocomplete = "off";
-        input.spellcheck = false;
-        input.setAttribute("aria-label", `Иероглифы для: ${word.meaning_ru || ""}`);
-
-        const targetChars = Array.from(word.hanzi || "");
-
-        input.addEventListener("input", () => {
-          const val = input.value.trim();
-          input.classList.remove("correct", "partial", "incorrect");
-
-          if (!val) {
-            updateWritingCounter();
-            return;
-          }
-
-          if (val === word.hanzi) {
-            input.classList.add("correct");
-          } else {
-            const inputChars = Array.from(val);
-            const hasMatchingChar = targetChars.length >= 2 && inputChars.some((ch) => targetChars.includes(ch));
-            if (hasMatchingChar) {
-              input.classList.add("partial");
-            } else {
-              input.classList.add("incorrect");
-            }
-          }
-          updateWritingCounter();
-        });
-
-        row.appendChild(meaningEl);
-        row.appendChild(input);
-        frag.appendChild(row);
-      });
-
-      writingList.appendChild(frag);
-      updateWritingCounter();
-    }
-
     eraseTextStatusesBtn.addEventListener("click", () => {
       if (currentPracticeWords.length === 0) return;
       currentPracticeWords.forEach((word) => {
         delete wordStatuses[word.hanzi];
       });
       saveStatuses();
+      updateVocabBadge();
       applyStatusesToCurrentText();
       hidePopoverImmediate();
       const title = (appData.texts && appData.texts[currentTextIndex]?.title) || "текущего текста";
       setStatusMsg(`Статусы изученных слов сброшены для «${title}».`, false);
     });
 
-    shufflePracticeBtn.addEventListener("click", () => {
-      const shuffled = shuffleArray(currentPracticeWords);
-      renderPractice(currentTextIndex, shuffled);
-    });
 
-    resetPracticeBtn.addEventListener("click", () => {
-      renderPractice(currentTextIndex);
-    });
-
-    shuffleWritingBtn.addEventListener("click", () => {
-      const shuffled = shuffleArray(currentPracticeWords);
-      renderWriting(currentTextIndex, shuffled);
-    });
-
-    resetWritingBtn.addEventListener("click", () => {
-      renderWriting(currentTextIndex);
-    });
 
     // Initial render from saved library (or DEFAULT_DATA)
     wordMap = buildWordMap(appData.words);
     populateTextSelect();
     renderText(0);
+    const vocabCountBadge = document.getElementById("vocabCountBadge");
+    const openCardsBtn = document.getElementById("openCardsBtn");
+    const ankiOverlay = document.getElementById("ankiOverlay");
+    const ankiCounter = document.getElementById("ankiCounter");
+    const ankiCloseBtn = document.getElementById("ankiCloseBtn");
+    const ankiCenter = document.getElementById("ankiCenter");
+    const ankiPinyinBtn = document.getElementById("ankiPinyinBtn");
+    const ankiHanzi = document.getElementById("ankiHanzi");
+    const ankiMeaningBtn = document.getElementById("ankiMeaningBtn");
+    const ankiNextBtn = document.getElementById("ankiNextBtn");
+    const ankiRestartBtn = document.getElementById("ankiRestartBtn");
+
+    const PINYIN_ICON_SVG = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l6 6"></path><path d="m4 14 6-6 2-3"></path><path d="M2 5h12"></path><path d="M7 2h1"></path><path d="m22 22-5-10-5 10"></path><path d="M14 18h6"></path></svg>`;
+
+    let ankiDeck = [];
+    let ankiIndex = 0;
+
+    function getStudyWords() {
+      const libByHanzi = new Map();
+      (appData.words || []).forEach((w) => {
+        if (w && w.hanzi && !libByHanzi.has(w.hanzi)) {
+          libByHanzi.set(w.hanzi, w);
+        }
+      });
+
+      const list = [];
+      Object.keys(wordStatuses).forEach((hanzi) => {
+        const rec = getWordRecord(hanzi);
+        if (rec && (rec.status === "learning" || rec.status === "learned")) {
+          const libWord = libByHanzi.get(hanzi);
+          list.push({
+            hanzi,
+            status: rec.status,
+            pinyin: rec.pinyin || libWord?.pinyin || "—",
+            meaning_ru: rec.meaning_ru || libWord?.meaning_ru || "—"
+          });
+        }
+      });
+      return list;
+    }
+
+    function updateVocabBadge() {
+      const count = getStudyWords().length;
+      vocabCountBadge.textContent = `${count} слов`;
+    }
+
+    function renderAnkiCard() {
+      const total = ankiDeck.length;
+      ankiCounter.textContent = `${ankiIndex}/${total}`;
+
+      if (total === 0) {
+        ankiPinyinBtn.style.display = "none";
+        ankiMeaningBtn.style.display = "none";
+        ankiNextBtn.style.display = "none";
+        ankiRestartBtn.style.display = "none";
+        ankiHanzi.textContent = "";
+        let emptyEl = ankiCenter.querySelector(".anki-empty-msg");
+        if (!emptyEl) {
+          emptyEl = document.createElement("div");
+          emptyEl.className = "anki-empty-msg";
+          ankiCenter.appendChild(emptyEl);
+        }
+        emptyEl.textContent = "Пока нет изученных или изучаемых слов. Наведи на слово в тексте и отметь статус «Учу» или «Знаю».";
+        return;
+      }
+
+      const existingEmpty = ankiCenter.querySelector(".anki-empty-msg");
+      if (existingEmpty) existingEmpty.remove();
+
+      if (ankiIndex >= total) {
+        ankiPinyinBtn.style.display = "none";
+        ankiMeaningBtn.style.display = "none";
+        ankiNextBtn.style.display = "none";
+        ankiRestartBtn.style.display = "inline-flex";
+        ankiHanzi.textContent = "Готово!";
+        return;
+      }
+
+      const card = ankiDeck[ankiIndex];
+      ankiRestartBtn.style.display = "none";
+      ankiPinyinBtn.style.display = "inline-flex";
+      ankiMeaningBtn.style.display = "inline-flex";
+      ankiNextBtn.style.display = "inline-flex";
+
+      ankiPinyinBtn.classList.remove("revealed-pinyin");
+      ankiPinyinBtn.innerHTML = PINYIN_ICON_SVG;
+
+      ankiHanzi.textContent = card.hanzi;
+
+      ankiMeaningBtn.classList.remove("revealed-meaning");
+      ankiMeaningBtn.textContent = "Значение";
+
+      ankiNextBtn.classList.remove("status-learning", "status-learned");
+      ankiNextBtn.classList.add(card.status === "learned" ? "status-learned" : "status-learning");
+    }
+
+    function startAnkiQuiz() {
+      ankiDeck = shuffleArray(getStudyWords());
+      ankiIndex = 0;
+      renderAnkiCard();
+      ankiOverlay.classList.add("open");
+    }
+
+    openCardsBtn.addEventListener("click", startAnkiQuiz);
+
+    ankiCloseBtn.addEventListener("click", () => {
+      ankiOverlay.classList.remove("open");
+    });
+
+    ankiOverlay.addEventListener("click", (e) => {
+      if (e.target === ankiOverlay) {
+        ankiOverlay.classList.remove("open");
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && ankiOverlay.classList.contains("open")) {
+        ankiOverlay.classList.remove("open");
+      }
+    });
+
+    ankiPinyinBtn.addEventListener("click", () => {
+      if (ankiIndex >= ankiDeck.length) return;
+      ankiPinyinBtn.textContent = ankiDeck[ankiIndex].pinyin;
+      ankiPinyinBtn.classList.add("revealed-pinyin");
+    });
+
+    ankiMeaningBtn.addEventListener("click", () => {
+      if (ankiIndex >= ankiDeck.length) return;
+      ankiMeaningBtn.textContent = ankiDeck[ankiIndex].meaning_ru;
+      ankiMeaningBtn.classList.add("revealed-meaning");
+    });
+
+    ankiNextBtn.addEventListener("click", () => {
+      if (ankiIndex < ankiDeck.length) {
+        ankiIndex += 1;
+        renderAnkiCard();
+      }
+    });
+
+    ankiRestartBtn.addEventListener("click", startAnkiQuiz);
+
+    const openVocabWriteBtn = document.getElementById("openVocabWriteBtn");
+    const vocabWriteOverlay = document.getElementById("vocabWriteOverlay");
+    const vocabWriteCounter = document.getElementById("vocabWriteCounter");
+    const vocabWriteCloseBtn = document.getElementById("vocabWriteCloseBtn");
+    const vocabWriteCenter = document.getElementById("vocabWriteCenter");
+    const vocabWritePinyinBtn = document.getElementById("vocabWritePinyinBtn");
+    const vocabWriteInput = document.getElementById("vocabWriteInput");
+    const vocabWriteRevealed = document.getElementById("vocabWriteRevealed");
+    const vocabWriteMeaning = document.getElementById("vocabWriteMeaning");
+    const vocabWriteEyeBtn = document.getElementById("vocabWriteEyeBtn");
+    const vocabWriteNextBtn = document.getElementById("vocabWriteNextBtn");
+
+    const writeStatsOverlay = document.getElementById("writeStatsOverlay");
+    const writeStatsCloseIcon = document.getElementById("writeStatsCloseIcon");
+    const writeStatsCloseBtn = document.getElementById("writeStatsCloseBtn");
+    const writeStatsRestartBtn = document.getElementById("writeStatsRestartBtn");
+    const statTotalShown = document.getElementById("statTotalShown");
+    const statCleanCorrect = document.getElementById("statCleanCorrect");
+    const statWithPinyin = document.getElementById("statWithPinyin");
+    const statWithEye = document.getElementById("statWithEye");
+
+    let writeDeck = [];
+    let writeIndex = 0;
+    let writeQuizMode = "vocab";
+    let writeStats = { shown: 0, cleanCorrect: 0, withPinyin: 0, withEye: 0 };
+    let cardState = { usedPinyin: false, usedEye: false, solvedCorrect: false, committed: false };
+
+    function commitCurrentWriteCard() {
+      if (cardState.committed || writeDeck.length === 0 || writeIndex >= writeDeck.length) return;
+      cardState.committed = true;
+      if (cardState.solvedCorrect && !cardState.usedPinyin && !cardState.usedEye) {
+        writeStats.cleanCorrect += 1;
+      }
+    }
+
+    function showWriteStatsModal() {
+      vocabWriteOverlay.classList.remove("open");
+      statTotalShown.textContent = String(writeStats.shown);
+      statCleanCorrect.textContent = String(writeStats.cleanCorrect);
+      statWithPinyin.textContent = String(writeStats.withPinyin);
+      statWithEye.textContent = String(writeStats.withEye);
+      writeStatsOverlay.classList.add("open");
+    }
+
+    function renderVocabWriteCard() {
+      const total = writeDeck.length;
+      vocabWriteCounter.textContent = `${writeIndex}/${total}`;
+
+      if (total === 0) {
+        vocabWritePinyinBtn.style.display = "none";
+        vocabWriteInput.style.display = "none";
+        vocabWriteRevealed.style.display = "none";
+        vocabWriteMeaning.style.display = "none";
+        vocabWriteEyeBtn.style.display = "none";
+        vocabWriteNextBtn.style.display = "none";
+        let emptyEl = vocabWriteCenter.querySelector(".anki-empty-msg");
+        if (!emptyEl) {
+          emptyEl = document.createElement("div");
+          emptyEl.className = "anki-empty-msg";
+          vocabWriteCenter.appendChild(emptyEl);
+        }
+        emptyEl.textContent = writeQuizMode === "text"
+          ? "В текущем тексте нет слов из словаря."
+          : "Пока нет изученных или изучаемых слов. Наведи на слово в тексте и отметь статус «Учу» или «Знаю».";
+        return;
+      }
+
+      const existingEmpty = vocabWriteCenter.querySelector(".anki-empty-msg");
+      if (existingEmpty) existingEmpty.remove();
+
+      if (writeIndex >= total) {
+        showWriteStatsModal();
+        return;
+      }
+
+      const card = writeDeck[writeIndex];
+      writeStats.shown += 1;
+      cardState = { usedPinyin: false, usedEye: false, solvedCorrect: false, committed: false };
+
+      vocabWritePinyinBtn.style.display = "inline-flex";
+      vocabWritePinyinBtn.classList.remove("revealed-pinyin");
+      vocabWritePinyinBtn.innerHTML = PINYIN_ICON_SVG;
+
+      vocabWriteInput.style.display = "block";
+      vocabWriteInput.value = "";
+      vocabWriteInput.classList.remove("correct", "partial", "incorrect");
+
+      vocabWriteRevealed.style.display = "none";
+      vocabWriteRevealed.textContent = card.hanzi;
+
+      vocabWriteMeaning.style.display = "block";
+      vocabWriteMeaning.textContent = card.meaning_ru;
+
+      vocabWriteEyeBtn.style.display = "inline-flex";
+      vocabWriteNextBtn.style.display = "none";
+      vocabWriteNextBtn.classList.remove("status-learning", "status-learned");
+      vocabWriteNextBtn.classList.add(card.status === "learned" ? "status-learned" : "status-learning");
+
+      setTimeout(() => vocabWriteInput.focus(), 50);
+    }
+
+    function startVocabWriteQuiz(mode) {
+      if (mode === "vocab" || mode === "text") {
+        writeQuizMode = mode;
+      }
+      writeStatsOverlay.classList.remove("open");
+      const sourceWords = writeQuizMode === "text"
+        ? currentPracticeWords.map((w) => ({
+            hanzi: w.hanzi,
+            status: getWordStatus(w.hanzi),
+            pinyin: w.pinyin || "—",
+            meaning_ru: w.meaning_ru || "—"
+          }))
+        : getStudyWords();
+      writeDeck = shuffleArray(sourceWords);
+      writeIndex = 0;
+      writeStats = { shown: 0, cleanCorrect: 0, withPinyin: 0, withEye: 0 };
+      renderVocabWriteCard();
+      vocabWriteOverlay.classList.add("open");
+    }
+
+    function finishVocabWriteSession() {
+      if (writeDeck.length === 0) {
+        vocabWriteOverlay.classList.remove("open");
+        return;
+      }
+      commitCurrentWriteCard();
+      showWriteStatsModal();
+    }
+
+    openVocabWriteBtn.addEventListener("click", () => startVocabWriteQuiz("vocab"));
+    openTextWriteBtn.addEventListener("click", () => startVocabWriteQuiz("text"));
+    vocabWriteCloseBtn.addEventListener("click", finishVocabWriteSession);
+
+    vocabWriteOverlay.addEventListener("click", (e) => {
+      if (e.target === vocabWriteOverlay) {
+        finishVocabWriteSession();
+      }
+    });
+
+    vocabWritePinyinBtn.addEventListener("click", () => {
+      if (writeIndex >= writeDeck.length) return;
+      if (!cardState.usedPinyin) {
+        cardState.usedPinyin = true;
+        writeStats.withPinyin += 1;
+      }
+      vocabWritePinyinBtn.textContent = writeDeck[writeIndex].pinyin;
+      vocabWritePinyinBtn.classList.add("revealed-pinyin");
+    });
+
+    vocabWriteInput.addEventListener("input", () => {
+      if (writeIndex >= writeDeck.length) return;
+      const card = writeDeck[writeIndex];
+      const val = vocabWriteInput.value.trim();
+      const targetChars = Array.from(card.hanzi || "");
+
+      vocabWriteInput.classList.remove("correct", "partial", "incorrect");
+      if (!val) {
+        cardState.solvedCorrect = false;
+        vocabWriteNextBtn.style.display = "none";
+        return;
+      }
+
+      if (val === card.hanzi) {
+        vocabWriteInput.classList.add("correct");
+        cardState.solvedCorrect = true;
+        vocabWriteNextBtn.style.display = "inline-flex";
+      } else {
+        cardState.solvedCorrect = false;
+        vocabWriteNextBtn.style.display = "none";
+        const inputChars = Array.from(val);
+        const hasMatch = targetChars.length >= 2 && inputChars.some((ch) => targetChars.includes(ch));
+        vocabWriteInput.classList.add(hasMatch ? "partial" : "incorrect");
+      }
+    });
+
+    vocabWriteEyeBtn.addEventListener("click", () => {
+      if (writeIndex >= writeDeck.length) return;
+      if (!cardState.usedEye) {
+        cardState.usedEye = true;
+        writeStats.withEye += 1;
+      }
+      cardState.solvedCorrect = false;
+      vocabWriteInput.style.display = "none";
+      vocabWriteRevealed.textContent = writeDeck[writeIndex].hanzi;
+      vocabWriteRevealed.style.display = "block";
+      vocabWriteEyeBtn.style.display = "none";
+      vocabWriteNextBtn.style.display = "inline-flex";
+    });
+
+    vocabWriteNextBtn.addEventListener("click", () => {
+      commitCurrentWriteCard();
+      writeIndex += 1;
+      renderVocabWriteCard();
+    });
+
+    writeStatsCloseIcon.addEventListener("click", () => {
+      writeStatsOverlay.classList.remove("open");
+    });
+
+    writeStatsCloseBtn.addEventListener("click", () => {
+      writeStatsOverlay.classList.remove("open");
+    });
+
+    writeStatsOverlay.addEventListener("click", (e) => {
+      if (e.target === writeStatsOverlay) {
+        writeStatsOverlay.classList.remove("open");
+      }
+    });
+
+    writeStatsRestartBtn.addEventListener("click", () => startVocabWriteQuiz(writeQuizMode));
+
+    updateVocabBadge();
     setStatusMsg(`В памяти: ${appData.words.length} слов, ${appData.texts.length} текстов.`, false);
     checkSharedPayload();
 

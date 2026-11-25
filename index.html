@@ -809,12 +809,51 @@
       max-width: 580px;
     }
 
+    .match-eye-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .match-eye-cell {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 30px;
+    }
+
+    .match-eye-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 28px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #f8fafc;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background-color 0.12s, color 0.12s;
+    }
+
+    .match-eye-btn:hover {
+      background: #e2e8f0;
+      color: var(--text-main);
+    }
+
+    .match-eye-btn.is-hidden {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
     .match-slots {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
       width: 100%;
-      margin: 14px 0 18px;
+      margin: 4px 0 18px;
     }
 
     .match-slot {
@@ -1019,6 +1058,7 @@
       .text-write-card {
         padding: 14px 16px;
       }
+      .match-eye-row,
       .match-slots {
         gap: 6px;
       }
@@ -1039,7 +1079,7 @@
   <div class="container">
     <div class="app-meta">
       <span>HanziReader</span>
-      <span class="version-badge">Версия v9</span>
+      <span class="version-badge">Версия v10</span>
     </div>
     <div class="toolbar">
       <div class="file-group">
@@ -1317,6 +1357,32 @@
       </div>
 
       <div id="matchCenter" class="anki-center" style="padding: 12px 4px; gap: 8px;">
+        <div id="matchEyeRow" class="match-eye-row">
+          <div class="match-eye-cell">
+            <button type="button" class="match-eye-btn is-hidden" data-eye-slot="hanzi" title="Показать иероглиф" aria-label="Показать иероглиф">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <div class="match-eye-cell">
+            <button type="button" class="match-eye-btn is-hidden" data-eye-slot="pinyin" title="Показать пиньинь" aria-label="Показать пиньинь">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <div class="match-eye-cell">
+            <button type="button" class="match-eye-btn is-hidden" data-eye-slot="meaning" title="Показать значение" aria-label="Показать значение">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
         <div id="matchSlots" class="match-slots">
           <div class="match-slot" data-slot="hanzi">
             <span class="match-slot-label">Иероглиф</span>
@@ -2340,6 +2406,12 @@
     const matchCounter = document.getElementById("matchCounter");
     const matchCloseBtn = document.getElementById("matchCloseBtn");
     const matchCenter = document.getElementById("matchCenter");
+    const matchEyeRow = document.getElementById("matchEyeRow");
+    const matchEyeBtns = {
+      hanzi: matchEyeRow.querySelector('[data-eye-slot="hanzi"]'),
+      pinyin: matchEyeRow.querySelector('[data-eye-slot="pinyin"]'),
+      meaning: matchEyeRow.querySelector('[data-eye-slot="meaning"]')
+    };
     const matchSlots = document.getElementById("matchSlots");
     const matchSlotEls = {
       hanzi: matchSlots.querySelector('[data-slot="hanzi"]'),
@@ -2381,6 +2453,30 @@
       return null;
     }
 
+    function updateMatchEyeButtons() {
+      SLOT_KEYS.forEach((key) => {
+        matchEyeBtns[key].classList.toggle("is-hidden", key !== matchCardState.activeSlot);
+      });
+    }
+
+    function solveActiveMatchSlot(slotKey, val) {
+      matchCardState.filled[slotKey] = true;
+      matchValEls[slotKey].textContent = val;
+      matchSlotEls[slotKey].classList.remove("active");
+      matchSlotEls[slotKey].classList.add("solved");
+
+      const nextSlot = getNextUnfilledSlot();
+      matchCardState.activeSlot = nextSlot;
+      updateMatchEyeButtons();
+      if (nextSlot) {
+        matchSlotEls[nextSlot].classList.add("active");
+        renderMatchOptions();
+      } else {
+        matchOptions.innerHTML = "";
+        matchNextBtn.style.display = "inline-flex";
+      }
+    }
+
     function renderMatchOptions() {
       matchOptions.innerHTML = "";
       const activeKey = matchCardState.activeSlot;
@@ -2389,14 +2485,27 @@
       const currentWord = matchDeck[matchIndex];
       const expectedValue = getMatchWordValue(currentWord, activeKey);
 
-      const values = Array.from(new Set(
-        currentPracticeWords.map((w) => getMatchWordValue(w, activeKey)).filter(Boolean)
-      ));
-
-      if (activeKey === "pinyin") {
-        values.sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
-      } else if (activeKey === "meaning") {
-        values.sort((a, b) => a.localeCompare(b, "ru", { sensitivity: "base" }));
+      let values;
+      if (activeKey === "hanzi") {
+        const hanziToPinyin = new Map();
+        currentPracticeWords.forEach((w) => {
+          if (w.hanzi && !hanziToPinyin.has(w.hanzi)) {
+            hanziToPinyin.set(w.hanzi, w.pinyin || "");
+          }
+        });
+        values = Array.from(hanziToPinyin.keys()).sort((a, b) => {
+          const cmp = hanziToPinyin.get(a).localeCompare(hanziToPinyin.get(b), "en", { sensitivity: "base" });
+          return cmp !== 0 ? cmp : a.localeCompare(b);
+        });
+      } else {
+        values = Array.from(new Set(
+          currentPracticeWords.map((w) => getMatchWordValue(w, activeKey)).filter(Boolean)
+        ));
+        if (activeKey === "pinyin") {
+          values.sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
+        } else if (activeKey === "meaning") {
+          values.sort((a, b) => a.localeCompare(b, "ru", { sensitivity: "base" }));
+        }
       }
 
       const frag = document.createDocumentFragment();
@@ -2408,20 +2517,7 @@
 
         btn.addEventListener("click", () => {
           if (val === expectedValue) {
-            matchCardState.filled[activeKey] = true;
-            matchValEls[activeKey].textContent = val;
-            matchSlotEls[activeKey].classList.remove("active");
-            matchSlotEls[activeKey].classList.add("solved");
-
-            const nextSlot = getNextUnfilledSlot();
-            matchCardState.activeSlot = nextSlot;
-            if (nextSlot) {
-              matchSlotEls[nextSlot].classList.add("active");
-              renderMatchOptions();
-            } else {
-              matchOptions.innerHTML = "";
-              matchNextBtn.style.display = "inline-flex";
-            }
+            solveActiveMatchSlot(activeKey, val);
           } else {
             btn.classList.add("wrong");
             btn.disabled = true;
@@ -2442,6 +2538,7 @@
       if (existingEmpty) existingEmpty.remove();
 
       if (total === 0) {
+        matchEyeRow.style.display = "none";
         matchSlots.style.display = "none";
         matchOptionsBar.style.display = "none";
         matchOptions.style.display = "none";
@@ -2455,6 +2552,7 @@
       }
 
       if (matchIndex >= total) {
+        matchEyeRow.style.display = "none";
         matchSlots.style.display = "none";
         matchOptionsBar.style.display = "none";
         matchOptions.style.display = "none";
@@ -2471,6 +2569,7 @@
       }
 
       const word = matchDeck[matchIndex];
+      matchEyeRow.style.display = "grid";
       matchSlots.style.display = "grid";
       matchOptionsBar.style.display = "flex";
       matchOptions.style.display = "flex";
@@ -2509,6 +2608,7 @@
       if (firstActive) {
         matchSlotEls[firstActive].classList.add("active");
       }
+      updateMatchEyeButtons();
 
       renderMatchOptions();
     }
@@ -2519,6 +2619,14 @@
       renderMatchCard();
       matchOverlay.classList.add("open");
     }
+
+    SLOT_KEYS.forEach((key) => {
+      matchEyeBtns[key].addEventListener("click", () => {
+        if (matchCardState.activeSlot !== key || matchIndex >= matchDeck.length) return;
+        const val = getMatchWordValue(matchDeck[matchIndex], key);
+        solveActiveMatchSlot(key, val);
+      });
+    });
 
     openMatchBtn.addEventListener("click", startMatchQuiz);
     matchCloseBtn.addEventListener("click", () => {
